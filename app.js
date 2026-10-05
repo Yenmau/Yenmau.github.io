@@ -24,9 +24,9 @@
   const term = document.querySelector('.term-body');
   if (term) {
     window.setTimeout(() => {
-      const line = document.createElement('span');
-      line.className = 'c-dim';
-      line.textContent = '\n[ok] session established — 127.0.0.1';
+      const line = document.createElement('p');
+      line.className = 'tline c-dim';
+      line.textContent = '[ok] session established — 127.0.0.1';
       term.appendChild(line);
     }, 1100);
   }
