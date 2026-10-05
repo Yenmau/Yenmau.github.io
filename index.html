@@ -1,22 +1,188 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="../assets/css/style.css" />
-  </head>
-  <body>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vincent Tiono — Cyber Security &amp; Penetration Testing</title>
+  <meta name="description" content="Portfolio of Vincent Tiono — Computer Science student specializing in cyber security and penetration testing. Mobile & web application security assessments." />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow" aria-hidden="true"></div>
 
-    <div>
-      <img
-        class="rounded-full"
-        src="../assets/img/vincent.jpg"
-        alt="Maaf Foto Tidak Tersedia "
-        width="250px"
-      />
+  <header class="nav">
+    <a class="brand" href="#top">
+      <span class="dot"></span>
+      <span class="brand-text">vincent<span class="dim">@</span>security</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#projects">projects</a>
+      <a href="#about">about</a>
+      <a href="mailto:vinotiono@gmail.com">contact</a>
+    </nav>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <p class="prompt"><span class="dim">$</span> whoami</p>
+      <h1>Vincent Tiono</h1>
+      <p class="role">Cyber Security &middot; Penetration Testing</p>
+      <p class="lede">
+        Computer Science student at Bina Nusantara University specializing in cyber security.
+        I break applications on purpose &mdash; mobile and web security assessments, following
+        OWASP MASTG and OWASP Top 10 &mdash; and write the findings up so they can actually be fixed.
+      </p>
+      <div class="hero-tags">
+        <span class="tag">Mobile Pen Testing</span>
+        <span class="tag">Web Pen Testing</span>
+        <span class="tag">Secure Programming</span>
+        <span class="tag">JADX &middot; Burp &middot; Frida</span>
+      </div>
+    </section>
+
+    <section id="projects" class="section">
+      <div class="section-head">
+        <h2><span class="dim">//</span> selected projects</h2>
+        <p class="section-sub">Security assessments and builds &mdash; all targets either authorized labs or anonymized.</p>
+      </div>
+
+      <div class="cards">
+        <!-- Maumau -->
+        <article class="card">
+          <div class="card-top">
+            <span class="chip chip-web">Web</span>
+            <span class="chip">Build</span>
+          </div>
+          <h3>Maumau &mdash; Movie Catalog Web App</h3>
+          <p>
+            Streaming-style catalog built with React + Vite + Tailwind, consuming the TMDB REST API
+            (posters, ratings, synopsis, trailers) and deployed to GitHub Pages. Handled a real
+            credential-exposure incident along the way &mdash; removed a committed secret from the repo
+            and rewrote git history.
+          </p>
+          <ul class="meta">
+            <li><span class="k">stack</span> React &middot; Vite &middot; Tailwind</li>
+            <li><span class="k">api</span> TMDB</li>
+          </ul>
+          <div class="card-links">
+            <a class="btn btn-sm" href="https://github.com/Yenmau/Maumau" target="_blank" rel="noopener">Repository</a>
+            <a class="btn btn-sm btn-ghost" href="https://yenmau.github.io/Maumau/" target="_blank" rel="noopener">Live demo</a>
+          </div>
+        </article>
+
+        <!-- Juice Shop -->
+        <article class="card">
+          <div class="card-top">
+            <span class="chip chip-web">Web</span>
+            <span class="chip">Pentest</span>
+          </div>
+          <h3>OWASP Juice Shop &mdash; Web Application Pentest</h3>
+          <p>
+            Authorized penetration test against OWASP Juice Shop 20.1.1 in an isolated local Docker lab.
+            Two testing rounds produced <strong>11 confirmed findings</strong>, including two critical
+            authentication / authorization bypasses (JWT signing-key forgery, mass-assignment to admin).
+            Reported through a structured pentest report.
+          </p>
+          <ul class="meta">
+            <li><span class="k">findings</span> 11 (2 critical)</li>
+            <li><span class="k">cwes</span> CWE-321 &middot; 915 &middot; 89 &middot; 639 &middot; 347</li>
+          </ul>
+          <div class="card-links">
+            <a class="btn btn-sm" href="https://github.com/Yenmau/juice-shop-pentest" target="_blank" rel="noopener">Repository</a>
+          </div>
+        </article>
+
+        <!-- Seller app -->
+        <article class="card">
+          <div class="card-top">
+            <span class="chip chip-mob">Mobile</span>
+            <span class="chip">Pentest</span>
+          </div>
+          <h3>Android Seller App &mdash; Mobile Pentest</h3>
+          <p>
+            Static and dynamic analysis of an Android seller application following OWASP MASTG.
+            Identified weak OTP brute-force protection (High, CVSS 8.2) and insufficient rate limiting
+            on the analytics endpoint (Medium, CVSS 5.3). <em>Target anonymized.</em>
+          </p>
+          <ul class="meta">
+            <li><span class="k">standard</span> OWASP MASTG</li>
+            <li><span class="k">tools</span> JADX &middot; Burp &middot; Frida</li>
+          </ul>
+          <div class="card-links">
+            <a class="btn btn-sm" href="https://github.com/Yenmau/android-pentest-seller-app" target="_blank" rel="noopener">Repository</a>
+          </div>
+        </article>
+
+        <!-- Retail app -->
+        <article class="card">
+          <div class="card-top">
+            <span class="chip chip-mob">Mobile</span>
+            <span class="chip">Pentest</span>
+          </div>
+          <h3>Android Retail App &mdash; Mobile Pentest</h3>
+          <p>
+            Android application security assessment based on OWASP MASTG. Found
+            <code>android:allowBackup</code> enabled, potentially exposing application data
+            (Medium, CVSS 4.9), and weak OTP brute-force protection (High, CVSS 8.2).
+            <em>Target anonymized.</em>
+          </p>
+          <ul class="meta">
+            <li><span class="k">standard</span> OWASP MASTG</li>
+            <li><span class="k">tools</span> JADX &middot; Burp &middot; Frida</li>
+          </ul>
+          <div class="card-links">
+            <a class="btn btn-sm" href="https://github.com/Yenmau/android-pentest-retail-app" target="_blank" rel="noopener">Repository</a>
+          </div>
+        </article>
+      </div>
+
+      <div class="more">
+        <a class="btn btn-outline" href="https://github.com/Yenmau?tab=repositories" target="_blank" rel="noopener">
+          More projects on GitHub <span class="arrow">&rarr;</span>
+        </a>
+      </div>
+    </section>
+
+    <section id="about" class="section about">
+      <div class="section-head">
+        <h2><span class="dim">//</span> about</h2>
+      </div>
+      <div class="about-grid">
+        <div class="about-col">
+          <h3>Education</h3>
+          <ul class="list">
+            <li><strong>Bina Nusantara University</strong><span>B.Sc. Computer Science &mdash; Cyber Security &middot; expected 2028</span></li>
+            <li><strong>Merdeka Cyber</strong><span>Security Engineer Bootcamp &middot; certified June 2026</span></li>
+            <li><strong>SMK Telkom Banjarbaru</strong><span>Software Engineering &middot; 2021&ndash;2024</span></li>
+          </ul>
+        </div>
+        <div class="about-col">
+          <h3>Toolbox</h3>
+          <ul class="list list-plain">
+            <li>JADX &middot; Burp Suite &middot; Frida &middot; Android Emulator</li>
+            <li>OWASP MASTG &middot; OWASP Top 10 &middot; OWASP Juice Shop</li>
+            <li>Laravel &middot; React.js &middot; Tailwind &middot; JavaScript</li>
+            <li>JWT analysis &middot; SQL injection &middot; IDOR &middot; access control</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="https://github.com/Yenmau" target="_blank" rel="noopener">GitHub</a>
+      <a href="mailto:vinotiono@gmail.com">vinotiono@gmail.com</a>
     </div>
-    
-  </body>
+    <p class="footer-note">
+      All security testing documented here was performed against authorized labs or anonymized targets,
+      in controlled environments. Nothing here targets systems without permission.
+    </p>
+    <p class="footer-fine">Vincent Tiono &middot; Jakarta, Indonesia</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
 </html>
