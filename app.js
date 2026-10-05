@@ -19,4 +19,15 @@
     }, { threshold: 0.35 });
     map.forEach((_a, t) => nav.observe(t));
   }
+
+  // Append-only flavour line in the terminal panel (adds text, never hides it).
+  const term = document.querySelector('.term-body');
+  if (term) {
+    window.setTimeout(() => {
+      const line = document.createElement('span');
+      line.className = 'c-dim';
+      line.textContent = '\n[ok] session established — 127.0.0.1';
+      term.appendChild(line);
+    }, 1100);
+  }
 })();
