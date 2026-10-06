@@ -216,15 +216,13 @@ main, .nav, .footer { position: relative; z-index: 3; }
 .hero-tags { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
 .tag-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 9px; }
 .tag-group {
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
+  font-family: "Press Start 2P", var(--mono);
+  font-size: 7px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--accent);
-  min-width: 62px;
-  padding-right: 10px;
-  border-right: 1px solid var(--line);
-  margin-right: 1px;
+  flex: 0 0 100%;
+  margin: 0 0 2px;
 }
 .tag {
   font-family: var(--mono);
@@ -743,8 +741,8 @@ html.boot-out #boot { opacity: 0; transition: opacity .3s steps(4); }
   padding-left: 14px;
 }
 
-/* ---------- pixel pass: kept minimal on purpose ---------- */
-/* 8-bit section labels, the only place the pixel font appears outside the splash */
+/* ---------- pixel-game pass ---------- */
+/* pixel font carries the labels, tags, chips and buttons — not body copy */
 .section-head h2 {
   font-family: "Press Start 2P", var(--mono);
   font-size: 12px;
@@ -752,11 +750,67 @@ html.boot-out #boot { opacity: 0; transition: opacity .3s steps(4); }
   line-height: 1.9;
   letter-spacing: 0;
 }
-/* sharp corners everywhere: pixels don't round */
-.tag, .chip, .btn, .status-pill, .tdot, .rec, .brand .dot,
-.card, .about-panel, .idcard, .idcard-img, .term, .traj,
+.tag, .chip, .btn, .status-pill, .tag-group {
+  font-family: "Press Start 2P", var(--mono);
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+.tag { font-size: 8px; text-transform: uppercase; padding: 7px 10px; }
+.chip { font-size: 7px; text-transform: uppercase; padding: 6px 8px; }
+.btn { font-size: 9px; padding: 11px 14px; }
+.btn-sm { font-size: 8px; padding: 9px 12px; }
+.btn-outline { font-size: 9px; padding: 12px 16px; }
+.status-pill { font-size: 7px; padding: 6px 10px; }
+
+/* pixel corners: square, with a stepped notch cut from each corner */
+.tag, .chip, .btn, .status-pill {
+  border-radius: 0;
+  clip-path: polygon(
+    0 4px, 4px 4px, 4px 0,
+    calc(100% - 4px) 0, calc(100% - 4px) 4px, 100% 4px,
+    100% calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), calc(100% - 4px) 100%,
+    4px 100%, 4px calc(100% - 4px), 0 calc(100% - 4px)
+  );
+}
+.card, .about-panel, .term, .traj, .idcard-img, .idcard {
+  border-radius: 0;
+  clip-path: polygon(
+    0 8px, 8px 8px, 8px 0,
+    calc(100% - 8px) 0, calc(100% - 8px) 8px, 100% 8px,
+    100% calc(100% - 8px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%,
+    8px 100%, 8px calc(100% - 8px), 0 calc(100% - 8px)
+  );
+}
+/* the HUD brackets lived in the corners the notches now cut away */
+.hud { display: none; }
+.idcard, .idcard-img, .tdot, .rec, .brand .dot,
 .hud-tl, .hud-tr, .hud-bl, .hud-br { border-radius: 0; }
-.tag, .chip { padding-top: 4px; padding-bottom: 4px; }
+/* the notches clip any outer glow, so hover answers with the top hairline instead */
+.card:hover { box-shadow: none; }
+
+/* arcade display type: the name and section labels carry the pixel-games look */
+.hero h1 {
+  font-family: "Press Start 2P", var(--mono);
+  font-size: clamp(22px, 3.4vw, 32px);
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+.role {
+  font-family: "Press Start 2P", var(--mono);
+  font-size: 9px;
+  line-height: 1.7;
+  letter-spacing: 0.02em;
+}
+.brand-text { font-family: "Press Start 2P", var(--mono); font-size: 8px; }
+.about-col h3 {
+  font-family: "Press Start 2P", var(--mono);
+  font-size: 8px;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+}
+.traj-when { font-family: "Press Start 2P", var(--mono); font-size: 6px; letter-spacing: 0.04em; }
+/* keep the iOS status-bar band clear of the header */
+.nav { padding-top: calc(24px + env(safe-area-inset-top)); }
 
 /* ---------- responsive ---------- */
 @media (max-width: 900px) {
