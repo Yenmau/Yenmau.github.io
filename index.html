@@ -144,9 +144,11 @@
         </div>
       </div>
 
-      <article class="featured reveal">
-        <div class="featured-main">
+      <div class="cards">
+        <!-- Juice Shop -->
+        <article class="card reveal" style="--rail: var(--crit)">
           <div class="card-top">
+            <span class="card-idx">01</span>
             <span class="chip chip-web">Web</span>
             <span class="chip">Pentest</span>
             <span class="chip chip-crit">2 critical</span>
@@ -168,37 +170,10 @@
           <div class="card-links">
             <a class="btn btn-sm" href="https://github.com/Yenmau/juice-shop-pentest" target="_blank" rel="noopener">Repository</a>
           </div>
-        </div>
+        </article>
 
-        <div class="featured-side">
-          <p class="fs-label">critical chain</p>
-          <ol class="chain">
-            <li class="chain-node crit">
-              <span class="cn-idx">01</span>
-              <span class="cn-name">JWT signing-key forgery</span>
-              <span class="cn-meta">CWE-321 &middot; auth bypass</span>
-            </li>
-            <li class="chain-node">
-              <span class="cn-idx">02</span>
-              <span class="cn-name">mass-assignment to admin</span>
-              <span class="cn-meta">CWE-915 &middot; privilege escalation</span>
-            </li>
-            <li class="chain-node crit">
-              <span class="cn-idx">03</span>
-              <span class="cn-name">admin session obtained</span>
-              <span class="cn-meta">full account takeover</span>
-            </li>
-          </ol>
-          <div class="fs-foot">
-            <span class="score">CVSS v3.1 scored</span>
-            <span class="score">11 findings reported</span>
-          </div>
-        </div>
-      </article>
-
-      <div class="cards">
         <!-- Maumau -->
-        <article class="card reveal" style="--rail: var(--accent)">
+              <article class="card reveal" style="--rail: var(--accent)">
           <div class="card-top">
             <span class="card-idx">02</span>
             <span class="chip chip-web">Web</span>
@@ -290,35 +265,113 @@
       </div>
 
       <div class="tools">
-        <p class="tools-label">security &amp; testing</p>
-        <ul class="tool-row">
-          <li class="tool"><svg class="ic" aria-hidden="true"><use href="#i-burpsuite"/></svg><span>Burp Suite</span></li>
-          <li class="tool"><svg class="ic" aria-hidden="true"><use href="#i-frida"/></svg><span>Frida</span></li>
-          <li class="tool"><svg class="ic" aria-hidden="true"><use href="#i-jadx"/></svg><span>JADX</span></li>
-          <li class="tool"><svg class="ic" aria-hidden="true"><use href="#i-android"/></svg><span>Android Emulator</span></li>
-          <li class="tool"><svg class="ic" aria-hidden="true"><use href="#i-owasp"/></svg><span>OWASP MASTG</span></li>
-          <li class="tool"><svg class="ic" aria-hidden="true"><use href="#i-docker"/></svg><span>Docker</span></li>
-          <li class="tool"><svg class="ic" aria-hidden="true"><use href="#i-python"/></svg><span>Python</span></li>
-          <li class="tool is-learning"><svg class="ic" aria-hidden="true"><use href="#i-nmap"/></svg><span>Nmap</span><em>learning</em></li>
-          <li class="tool is-learning"><svg class="ic" aria-hidden="true"><use href="#i-wireshark"/></svg><span>Wireshark</span><em>learning</em></li>
-          <li class="tool is-learning"><svg class="ic" aria-hidden="true"><use href="#i-ghidra"/></svg><span>Ghidra</span><em>learning</em></li>
-        </ul>
+        <div class="tool-group">
+          <p class="tools-label">security &amp; testing</p>
+          <ul class="tool-list">
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-burpsuite"/></svg></span>
+              <span class="t-name">Burp Suite</span>
+            </li>
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-frida"/></svg></span>
+              <span class="t-name">Frida</span>
+            </li>
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-jadx"/></svg></span>
+              <span class="t-name">JADX</span>
+            </li>
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-android"/></svg></span>
+              <span class="t-name">Android Emulator</span>
+            </li>
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-owasp"/></svg></span>
+              <span class="t-name">OWASP MASTG</span>
+            </li>
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-docker"/></svg></span>
+              <span class="t-name">Docker</span>
+            </li>
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-python"/></svg></span>
+              <span class="t-name">Python</span>
+            </li>
+          </ul>
+        </div>
 
-        <p class="tools-label">build stack</p>
-        <ul class="tool-row">
-          <li class="tool"><svg class="ic" aria-hidden="true"><use href="#i-react"/></svg><span>React.js</span></li>
-          <li class="tool"><svg class="ic" aria-hidden="true"><use href="#i-vite"/></svg><span>Vite</span></li>
-          <li class="tool"><svg class="ic" aria-hidden="true"><use href="#i-tailwindcss"/></svg><span>Tailwind CSS</span></li>
-          <li class="tool"><svg class="ic" aria-hidden="true"><use href="#i-javascript"/></svg><span>JavaScript</span></li>
-          <li class="tool"><svg class="ic" aria-hidden="true"><use href="#i-php"/></svg><span>PHP</span></li>
-          <li class="tool"><svg class="ic" aria-hidden="true"><use href="#i-laravel"/></svg><span>Laravel</span></li>
-          <li class="tool"><svg class="ic" aria-hidden="true"><use href="#i-mysql"/></svg><span>MySQL</span></li>
-          <li class="tool"><svg class="ic" aria-hidden="true"><use href="#i-flutter"/></svg><span>Flutter</span></li>
-          <li class="tool"><svg class="ic" aria-hidden="true"><use href="#i-openjdk"/></svg><span>Java</span></li>
-          <li class="tool"><svg class="ic" aria-hidden="true"><use href="#i-c"/></svg><span>C</span></li>
-          <li class="tool"><svg class="ic" aria-hidden="true"><use href="#i-github"/></svg><span>GitHub</span></li>
-        </ul>
+        <div class="tool-group">
+          <p class="tools-label">learning this semester</p>
+          <ul class="tool-list">
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-nmap"/></svg></span>
+              <span class="t-name">Nmap</span>
+            </li>
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-wireshark"/></svg></span>
+              <span class="t-name">Wireshark</span>
+            </li>
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-ghidra"/></svg></span>
+              <span class="t-name">Ghidra</span>
+            </li>
+          </ul>
+          <p class="tool-note">
+            Network scanning, traffic analysis and binary reversing &mdash; moving from
+            application-level testing into lower-level analysis.
+          </p>
+        </div>
+
+        <div class="tool-group">
+          <p class="tools-label">build stack</p>
+          <ul class="tool-list">
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-react"/></svg></span>
+              <span class="t-name">React.js</span>
+            </li>
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-vite"/></svg></span>
+              <span class="t-name">Vite</span>
+            </li>
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-tailwindcss"/></svg></span>
+              <span class="t-name">Tailwind CSS</span>
+            </li>
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-javascript"/></svg></span>
+              <span class="t-name">JavaScript</span>
+            </li>
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-php"/></svg></span>
+              <span class="t-name">PHP</span>
+            </li>
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-laravel"/></svg></span>
+              <span class="t-name">Laravel</span>
+            </li>
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-mysql"/></svg></span>
+              <span class="t-name">MySQL</span>
+            </li>
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-flutter"/></svg></span>
+              <span class="t-name">Flutter</span>
+            </li>
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-openjdk"/></svg></span>
+              <span class="t-name">Java</span>
+            </li>
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-c"/></svg></span>
+              <span class="t-name">C</span>
+            </li>
+            <li class="tool-row">
+              <span class="tile" aria-hidden="true"><svg class="ic"><use href="#i-github"/></svg></span>
+              <span class="t-name">GitHub</span>
+            </li>
+          </ul>
+        </div>
       </div>
+
     </section>
 
     <section id="skills" class="section">
