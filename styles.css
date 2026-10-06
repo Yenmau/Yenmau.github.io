@@ -756,10 +756,6 @@ html.boot-out #boot { opacity: 0; transition: opacity .3s steps(4); }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  /* The splash still appears — it just holds still instead of animating. */
-  html.booting #boot { animation: none; }
-  .boot-lock, .boot-skip { animation: none; }
-  .boot-skip { opacity: 1; }
   .brand .dot, .rec, .caret, .idcard-scan, .bg-beam { animation: none; }
   .bg-beam, .idcard-scan { opacity: 0; }
   * { transition: none !important; }
