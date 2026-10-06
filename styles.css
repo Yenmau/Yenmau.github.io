@@ -719,6 +719,8 @@ html.boot-out #boot { opacity: 0; transition: opacity .3s steps(4); }
   padding-top: 3px;
 }
 .sr-v { font-size: 14px; line-height: 1.5; color: var(--muted); }
+/* a panel that spans the full grid width (used for Toolbox and Languages) */
+.span-2 { grid-column: 1 / -1; }
 .skills-note {
   margin: 18px 0 0;
   max-width: 700px;
@@ -743,6 +745,7 @@ html.boot-out #boot { opacity: 0; transition: opacity .3s steps(4); }
 }
 @media (max-width: 720px) {
   .cards, .about-grid, .skills-grid { grid-template-columns: 1fr; }
+  .span-2 { grid-column: auto; }
   .traj-step { border-right: 0; border-bottom: 1px solid var(--line); }
   .traj-step:last-child { border-bottom: 0; }
   .nav { flex-wrap: wrap; row-gap: 10px; }
