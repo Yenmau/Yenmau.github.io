@@ -70,19 +70,32 @@
     };
     const hardStop = window.setTimeout(finish, 2600);
 
-    const started = performance.now();
-    const tick = (now) => {
-      const p = Math.min(1, (now - started) / DURATION);
-      const value = Math.floor(p * 100);
-      pctEl.textContent = String(value).padStart(3, '0');
-      const filled = Math.round(p * BLOCKS);
-      cells.forEach((c, i) => c.classList.toggle('on', i < filled));
-      const stage = STAGES.filter((s) => value >= s[0]).pop();
-      if (stage && msgEl.textContent !== stage[1]) msgEl.textContent = stage[1];
-      if (p < 1) raf = window.requestAnimationFrame(tick);
-      else finish();
-    };
-    raf = window.requestAnimationFrame(tick);
+    const still = !!window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (still) {
+      // Reduced motion: show the finished state, hold it briefly, clear it. No
+      // counting, no stepping — the loading screen still appears, it just does
+      // not move.
+      cells.forEach((c) => c.classList.add('on'));
+      pctEl.textContent = '100';
+      msgEl.textContent = 'READY';
+      window.setTimeout(finish, 650);
+    } else {
+      const started = performance.now();
+      const tick = (now) => {
+        const p = Math.min(1, (now - started) / DURATION);
+        const value = Math.floor(p * 100);
+        pctEl.textContent = String(value).padStart(3, '0');
+        const filled = Math.round(p * BLOCKS);
+        cells.forEach((c, i) => c.classList.toggle('on', i < filled));
+        const stage = STAGES.filter((s) => value >= s[0]).pop();
+        if (stage && msgEl.textContent !== stage[1]) msgEl.textContent = stage[1];
+        if (p < 1) raf = window.requestAnimationFrame(tick);
+        else finish();
+      };
+      raf = window.requestAnimationFrame(tick);
+    }
 
     ['keydown', 'click', 'touchstart', 'wheel'].forEach((ev) =>
       window.addEventListener(ev, finish, { passive: true, once: true })

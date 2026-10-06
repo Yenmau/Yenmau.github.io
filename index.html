@@ -12,13 +12,11 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
   <link rel="stylesheet" href="styles.css" />
   <script>
-    // Boot splash gate. It only runs when JS works (with JS off the class is
-    // never set, so nothing is ever hidden) and skips visitors who asked for
-    // reduced motion. Shown on every load; it dismisses on any key/click/scroll.
+    // Boot splash gate: only runs when JS works, so with JS off nothing is ever
+    // hidden. It shows on every load for everyone — visitors whose system asks
+    // for reduced motion get a static version instead of the animated one
+    // (handled in app.js).
     (function () {
-      try {
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-      } catch (e) { /* matchMedia unavailable — fall through and show it */ }
       document.documentElement.classList.add('booting');
     })();
   </script>
