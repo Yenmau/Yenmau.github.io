@@ -44,26 +44,10 @@
     draw();
   }
 
-  // Reveal on scroll + count-up for the metric numbers. The hidden state (.pre)
+  // Reveal on scroll. The hidden state (.pre)
   // is added here, not in the CSS, so a failed script can never hide content.
   var reveal = document.querySelectorAll('.reveal');
-  var nums = document.querySelectorAll('.m-num[data-to]');
   var settle = function (el) { el.classList.remove('pre'); el.classList.add('in'); };
-  var countUp = function (el) {
-    var to = parseFloat(el.getAttribute('data-to')) || 0;
-    if (reduce) { el.textContent = String(to); return; }
-    var start = performance.now();
-    var dur = 800;
-    var step = function (now) {
-      var p = Math.min(1, (now - start) / dur);
-      var eased = 1 - Math.pow(1 - p, 3);
-      el.textContent = String(Math.round(to * eased));
-      if (p < 1) window.requestAnimationFrame(step);
-      else el.textContent = String(to);
-    };
-    window.requestAnimationFrame(step);
-  };
-
   // Reveal is driven by a scroll check rather than IntersectionObserver: an
   // instant jump (anchor click, fast wheel) can skip an element's intersection
   // entirely, which would leave it invisible forever. "top above the fold" is
@@ -93,22 +77,6 @@
     check();
     // last resort: nothing may stay hidden if scroll events never arrive
     window.setTimeout(function () { pending.forEach(settle); pending = []; }, 8000);
-  }
-
-  if ('IntersectionObserver' in window) {
-    var ioNum = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (e) {
-          if (!e.isIntersecting) return;
-          countUp(e.target);
-          ioNum.unobserve(e.target);
-        });
-      },
-      { threshold: 0.4 }
-    );
-    nums.forEach(function (el) { ioNum.observe(el); });
-  } else {
-    nums.forEach(function (el) { el.textContent = el.getAttribute('data-to'); });
   }
 
   // Append-only flavour line in the terminal panel (adds text, never hides it).

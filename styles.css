@@ -193,7 +193,6 @@ main, .nav, .footer { position: relative; z-index: 3; }
 .hero-copy { grid-column: 1; grid-row: 1; }
 .hero-side { grid-column: 2; grid-row: 1 / span 2; }
 .term { grid-column: 1; grid-row: 2; }
-.metrics { grid-column: 1 / -1; grid-row: 3; }
 
 .prompt {
   font-family: var(--mono);
@@ -362,39 +361,6 @@ main, .nav, .footer { position: relative; z-index: 3; }
 .tv { color: var(--muted); }
 .c-dim { color: var(--dim); }
 .c-ok { color: var(--accent); }
-
-/* ---------- metrics strip ---------- */
-.metrics {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  margin-top: clamp(36px, 5vw, 64px);
-}
-.metric {
-  padding: 22px 20px 20px;
-  border-left: 1px solid var(--line);
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-.metric:first-child { border-left: 0; padding-left: 0; }
-.m-num {
-  font-family: var(--mono);
-  font-size: clamp(30px, 4.4vw, 44px);
-  font-weight: 700;
-  line-height: 1;
-  letter-spacing: -0.03em;
-  color: var(--text);
-}
-.metric.is-crit .m-num { color: var(--crit); }
-.m-label {
-  font-family: var(--mono);
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--dim);
-}
 
 /* ---------- sections ---------- */
 .section {
@@ -779,7 +745,7 @@ main, .nav, .footer { position: relative; z-index: 3; }
     5px 100%, 5px calc(100% - 5px), 0 calc(100% - 5px)
   );
 }
-.card, .about-panel, .term, .traj, .idcard, .idcard-img, .metric {
+.card, .about-panel, .term, .traj, .idcard, .idcard-img {
   border-radius: 0;
 }
 .card, .about-panel, .term, .traj, .tool-group, .idcard-img {
@@ -903,14 +869,9 @@ html.boot-out #boot { opacity: 0; transition: opacity 0.3s steps(4); }
 /* ---------- responsive ---------- */
 @media (max-width: 1020px) {
   .hero { grid-template-columns: 1fr; gap: 26px; }
-  .hero-copy, .hero-side, .term, .metrics { grid-column: 1; grid-row: auto; }
+  .hero-copy, .hero-side, .term { grid-column: 1; grid-row: auto; }
   .hero-side { order: 3; }
   .term { order: 2; }
-  .metrics { order: 4; grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .metric { border-left: 1px solid var(--line); padding-left: 20px; }
-  .metric:first-child { padding-left: 20px; }
-  .metric:nth-child(odd) { border-left: 0; padding-left: 0; }
-  .metric:nth-child(n + 3) { border-top: 1px solid var(--line); }
   .idcard-img { min-height: 420px; }
 }
 @media (max-width: 760px) {
@@ -934,9 +895,6 @@ html.boot-out #boot { opacity: 0; transition: opacity 0.3s steps(4); }
   .brand { font-size: 8px; }
   .term-body { font-size: 11.5px; }
   .trow { grid-template-columns: 76px minmax(0, 1fr); }
-  .metrics { grid-template-columns: 1fr; }
-  .metric, .metric:first-child { border-left: 0; padding-left: 0; }
-  .metric:nth-child(n + 2) { border-top: 1px solid var(--line); }
   .hero h1 { font-size: clamp(32px, 10vw, 44px); }
   .card, .about-panel, .traj, .tool-group { clip-path: none; }
 }
