@@ -1,10 +1,8 @@
-// Small progressive enhancements. Content is ALWAYS visible without JS — the
-// reveal animation is gated behind html.js (set by the inline head script), so
-// with JS disabled nothing is ever hidden, and every counter already holds its
-// final number in the HTML.
+// Small progressive enhancements. Content is ALWAYS visible without JS — every
+// effect here is gated behind html.js (set by the inline head script) or behind a
+// class this file adds, and each one carries a hard-stop timeout, so a failed
+// script can never leave a line or a card hidden.
 (function () {
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
   // Highlight the nav link for the section currently in view.
   var links = document.querySelectorAll('.nav-links a[href^="#"]');
   var map = new Map();
@@ -47,6 +45,20 @@
   // Reveal on scroll. The hidden state (.pre)
   // is added here, not in the CSS, so a failed script can never hide content.
   var reveal = document.querySelectorAll('.reveal');
+
+  // Cascade the card reveals so a grid settles in a wave instead of all at once.
+  ['.cards', '.tools', '.about-grid', '.skills-grid'].forEach(function (sel) {
+    var g = document.querySelector(sel);
+    if (!g) return;
+    g.querySelectorAll('.reveal').forEach(function (el, i) {
+      el.style.transitionDelay = (i * 70) + 'ms';
+    });
+  });
+
+  // Stagger the toolkit tiles so the pulse travels down the columns like a scan.
+  document.querySelectorAll('.tile').forEach(function (t, i) {
+    t.style.animationDelay = ((i % 7) * 0.24).toFixed(2) + 's';
+  });
   var settle = function (el) { el.classList.remove('pre'); el.classList.add('in'); };
   // Reveal is driven by a scroll check rather than IntersectionObserver: an
   // instant jump (anchor click, fast wheel) can skip an element's intersection
@@ -79,15 +91,56 @@
     window.setTimeout(function () { pending.forEach(settle); pending = []; }, 8000);
   }
 
-  // Append-only flavour line in the terminal panel (adds text, never hides it).
+  // Terminal lines type in one after another. The hidden state lives behind a class
+  // this file adds (never CSS alone), and the clean-up timeout is registered BEFORE
+  // the loop, so even a throw mid-sequence can only ever leave the lines visible.
   var term = document.querySelector('.term-body');
   if (term) {
+    var lines = Array.prototype.slice.call(term.querySelectorAll('.trow, .tline'));
+    var CLEAR = 320 + 110 * lines.length + 900;
+    window.setTimeout(function () {
+      lines.forEach(function (el) {
+        el.style.transitionDelay = '';
+        el.classList.add('typed');
+      });
+      term.classList.remove('typing');
+    }, CLEAR);
+    term.classList.add('typing');
+    lines.forEach(function (el, i) {
+      el.style.transitionDelay = (i * 110) + 'ms';
+      window.setTimeout(function () { el.classList.add('typed'); }, 320 + i * 110);
+    });
+
+    // Append-only flavour line (adds text, never hides it).
     window.setTimeout(function () {
       var line = document.createElement('p');
-      line.className = 'tline c-dim';
+      line.className = 'tline c-dim typed';
       line.textContent = '[ok] session established — 127.0.0.1';
       term.appendChild(line);
-    }, 1100);
+    }, CLEAR - 300);
+  }
+
+  // Footer motion switch. Default follows the OS: reduced motion keeps the page calm
+  // (fades and micro-pulses only). "full" adds the large-area layer - drifting grid,
+  // light beam, ticker - which this machine would otherwise never show, because
+  // Windows animations are off (MinAnimate=0) and the browser reports `reduce`.
+  var mBtn = document.getElementById('motion-toggle');
+  var root = document.documentElement;
+  var applyMotion = function (full) {
+    root.classList.toggle('motion-full', full);
+    if (!mBtn) return;
+    mBtn.textContent = 'motion: ' + (full ? 'full' : 'auto');
+    mBtn.setAttribute('aria-pressed', full ? 'true' : 'false');
+  };
+  var saved = null;
+  try { saved = window.localStorage.getItem('vt-motion'); } catch (e) {}
+  if (saved === 'full') applyMotion(true);
+  if (mBtn) {
+    mBtn.addEventListener('click', function () {
+      var full = !root.classList.contains('motion-full');
+      applyMotion(full);
+      try { window.localStorage.setItem('vt-motion', full ? 'full' : 'auto'); } catch (e) {}
+    });
   }
 
   // Boot splash (pixel/arcade loading screen). The .booting class comes from the

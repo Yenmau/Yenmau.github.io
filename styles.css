@@ -869,7 +869,7 @@ html.boot-out #boot { opacity: 0; transition: opacity 0.3s steps(4); }
 /* ---------- responsive ---------- */
 @media (max-width: 1020px) {
   .hero { grid-template-columns: 1fr; gap: 26px; }
-  .hero-copy, .hero-side, .term { grid-column: 1; grid-row: auto; }
+  .hero-copy, .hero-side, .term, .ticker { grid-column: 1; grid-row: auto; }
   .hero-side { order: 3; }
   .term { order: 2; }
   .idcard-img { min-height: 420px; }
@@ -900,14 +900,147 @@ html.boot-out #boot { opacity: 0; transition: opacity 0.3s steps(4); }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .brand .dot, .rec, .caret, .idcard-scan, .glitch::before, .glitch::after { animation: none; }
-  .idcard-scan { opacity: 0; }
-  * { transition: none !important; animation: none !important; }
-  html.js .reveal { opacity: 1; transform: none; }
+  /* Only LARGE-AREA motion is switched off: background drift, the light beam and the
+     ticker scroll. Micro-motion (caret, status dot, REC dot, portrait scan, tile pulse,
+     name flicker, terminal typing, card stagger) stays - it is opacity/1px-level, and it
+     is the page's whole character. This laptop reports `reduce` only because Windows
+     animations are off (MinAnimate=0), so a blanket kill would hand the owner a poster.
+     The footer switch `motion: full` turns even this large-area layer back on. */
+  html:not(.motion-full) .bg-grid,
+  html:not(.motion-full) .bg-glow,
+  html:not(.motion-full) .bg-beam,
+  html:not(.motion-full) .ticker-track { animation: none; }
+  html:not(.motion-full) .ticker-track { transform: none; }
+  .term-body.typing .trow,
+  .term-body.typing .tline { transform: none; }
+  html.js .reveal.pre { opacity: 1; transform: none; }
+  html.js .reveal.in { transition: none; }
 }
 
 @media print {
-  .bg-grid, .bg-glow, .progress, #boot, .nav, .skip { display: none !important; }
+  .bg-grid, .bg-glow, .bg-beam, .ticker, .progress, #boot, .nav, .skip { display: none !important; }
   body { background: #fff; color: #000; }
   .card, .about-panel, .traj { border-color: #ccc; }
 }
+
+/* ---------- motion layer ---------- */
+/* Effects only. Nothing here changes layout, colour or copy: it exists so the page
+   reads as "live" instead of as a poster. Every animation traces back to a token
+   already used above (accent, line, panel). */
+@keyframes grid-drift {
+  from { background-position: 0 0, 0 0; }
+  to   { background-position: 48px 48px, 48px 48px; }
+}
+@keyframes glow-drift {
+  0%   { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; }
+  50%  { transform: translateX(-46%) translateY(20px) scale(1.05); opacity: 0.82; }
+  100% { transform: translateX(-54%) translateY(-12px) scale(0.99); opacity: 1; }
+}
+@keyframes beam-sweep {
+  0%   { transform: translateX(-40vw) skewX(-8deg); opacity: 0; }
+  14%  { opacity: 0.9; }
+  86%  { opacity: 0.9; }
+  100% { transform: translateX(110vw) skewX(-8deg); opacity: 0; }
+}
+@keyframes ticker-run { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes tile-pulse {
+  0%, 100% { border-color: var(--line-2); box-shadow: none; }
+  50%      { border-color: rgba(94, 234, 212, 0.38); box-shadow: 0 0 0 1px rgba(94, 234, 212, 0.06); }
+}
+@keyframes name-flicker {
+  0%, 89%, 100% { opacity: 1; }
+  90%   { opacity: 0.58; }
+  92%   { opacity: 1; }
+  94%   { opacity: 0.76; }
+  95.5% { opacity: 1; }
+}
+@keyframes num-flicker {
+  0%, 86%, 100% { opacity: 1; }
+  91% { opacity: 0.3; }
+}
+
+.bg-grid { animation: grid-drift 26s linear infinite; }
+.bg-glow { animation: glow-drift 24s ease-in-out infinite alternate; }
+.bg-beam {
+  position: fixed;
+  top: -30%;
+  left: 0;
+  width: 30vw;
+  height: 160vh;
+  background: linear-gradient(90deg, transparent, rgba(94, 234, 212, 0.05), transparent);
+  filter: blur(7px);
+  pointer-events: none;
+  z-index: 0;
+  animation: beam-sweep 15s linear infinite;
+}
+
+/* ticker: one strip under the hero, the slot the metric row used to fill */
+.ticker {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  position: relative;
+  overflow: hidden;
+  margin-top: clamp(30px, 4vw, 48px);
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: max-content;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  white-space: nowrap;
+  animation: ticker-run 52s linear infinite;
+}
+.ticker:hover .ticker-track { animation-play-state: paused; }
+.tick-sep { color: rgba(94, 234, 212, 0.4); }
+
+/* the name breathes; the section numbers flicker once per pass */
+.hero h1 { animation: name-flicker 11s steps(1, end) infinite; }
+.sec-num { animation: num-flicker 7s steps(1, end) infinite; }
+
+/* a sheen crosses a card on hover - and the tiles pulse down the columns */
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 42%, rgba(94, 234, 212, 0.07) 50%, transparent 58%);
+  transform: translateX(-130%);
+  transition: transform 0.75s ease;
+  pointer-events: none;
+}
+.card:hover::after { transform: translateX(130%); }
+.tile { animation: tile-pulse 4.6s ease-in-out infinite; }
+
+/* terminal lines arrive one after another (class added by JS, never by CSS) */
+.term-body.typing .trow,
+.term-body.typing .tline {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.34s ease, transform 0.34s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.term-body.typing .typed { opacity: 1; transform: none; }
+
+/* footer motion switch */
+.motion-toggle {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--dim);
+  background: none;
+  border: 1px solid var(--line-2);
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: color 0.18s ease, border-color 0.18s ease;
+}
+.motion-toggle:hover,
+.motion-toggle[aria-pressed="true"] { color: var(--accent); border-color: rgba(94, 234, 212, 0.5); }
