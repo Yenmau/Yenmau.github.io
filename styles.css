@@ -213,7 +213,19 @@ main, .nav, .footer { position: relative; z-index: 3; }
   font-size: 16.5px;
   margin: 0 0 26px;
 }
-.hero-tags { display: flex; flex-wrap: wrap; gap: 10px 9px; }
+.hero-tags { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+.tag-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 9px; }
+.tag-group {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  min-width: 62px;
+  padding-right: 10px;
+  border-right: 1px solid var(--line);
+  margin-right: 1px;
+}
 .tag {
   font-family: var(--mono);
   font-size: 12px;
@@ -223,7 +235,7 @@ main, .nav, .footer { position: relative; z-index: 3; }
   padding: 5px 11px;
   border-radius: 6px;
 }
-.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 26px; }
+.hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 0; }
 
 /* ---------- id card (photo) ---------- */
 .hero-side { display: flex; flex-direction: column; gap: 20px; }
@@ -730,6 +742,21 @@ html.boot-out #boot { opacity: 0; transition: opacity .3s steps(4); }
   border-left: 2px solid var(--line);
   padding-left: 14px;
 }
+
+/* ---------- pixel pass: kept minimal on purpose ---------- */
+/* 8-bit section labels, the only place the pixel font appears outside the splash */
+.section-head h2 {
+  font-family: "Press Start 2P", var(--mono);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.9;
+  letter-spacing: 0;
+}
+/* sharp corners everywhere: pixels don't round */
+.tag, .chip, .btn, .status-pill, .tdot, .rec, .brand .dot,
+.card, .about-panel, .idcard, .idcard-img, .term, .traj,
+.hud-tl, .hud-tr, .hud-bl, .hud-br { border-radius: 0; }
+.tag, .chip { padding-top: 4px; padding-bottom: 4px; }
 
 /* ---------- responsive ---------- */
 @media (max-width: 900px) {
