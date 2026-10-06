@@ -7,13 +7,42 @@
   <meta name="description" content="Portfolio of Vincent Tiono — Computer Science student specializing in cyber security and penetration testing. Mobile & web application security assessments." />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
   <link rel="preload" as="image" href="assets/portrait.jpg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
   <link rel="stylesheet" href="styles.css" />
+  <script>
+    // Boot splash gate. It only runs when JS works (with JS off the class is
+    // never set, so nothing is ever hidden) and skips visitors who asked for
+    // reduced motion. Shown on every load; it dismisses on any key/click/scroll.
+    (function () {
+      try {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      } catch (e) { /* matchMedia unavailable — fall through and show it */ }
+      document.documentElement.classList.add('booting');
+    })();
+  </script>
 </head>
 <body>
   <div class="bg-grid" aria-hidden="true"></div>
   <div class="bg-glow" aria-hidden="true"></div>
   <div class="bg-scan" aria-hidden="true"></div>
   <div class="bg-beam" aria-hidden="true"></div>
+
+  <div id="boot" aria-hidden="true">
+    <div class="boot-frame">
+      <div class="boot-art">
+        <svg class="boot-lock" viewBox="0 0 8 8" shape-rendering="crispEdges">
+          <path d="M2 0h4v1h-4z M1 1h1v1h-1z M6 1h1v1h-1z M1 2h1v1h-1z M6 2h1v1h-1z M0 3h8v1h-8z M0 4h2v1h-2z M3 4h2v1h-2z M6 4h2v1h-2z M0 5h2v1h-2z M3 5h2v1h-2z M6 5h2v1h-2z M0 6h2v1h-2z M3 6h2v1h-2z M6 6h2v1h-2z M0 7h8v1h-8z" />
+        </svg>
+      </div>
+      <p class="boot-name">VINCENT TIONO</p>
+      <p class="boot-sub">CYBER SECURITY &middot; PENETRATION TESTING</p>
+      <div class="boot-bar"></div>
+      <p class="boot-status"><span class="boot-pct">000</span>% &middot; <span class="boot-msg">LOADING MODULES</span></p>
+      <p class="boot-skip">PRESS ANY KEY TO SKIP</p>
+    </div>
+  </div>
 
   <header class="nav">
     <a class="brand" href="#top">
@@ -22,6 +51,7 @@
     </a>
     <nav class="nav-links">
       <a href="#projects">projects</a>
+      <a href="#skills">skills</a>
       <a href="#about">about</a>
       <a href="mailto:vinotiono@gmail.com">contact</a>
     </nav>
@@ -191,6 +221,62 @@
           More projects on GitHub <span class="arrow">&rarr;</span>
         </a>
       </div>
+    </section>
+
+    <section id="skills" class="section">
+      <div class="section-head">
+        <h2><span class="dim">//</span> skills &amp; background</h2>
+        <p class="section-sub">
+          I started out building web applications &mdash; that is still how I approach security work:
+          read the code first, then attack it.
+        </p>
+      </div>
+
+      <div class="traj">
+        <div class="traj-step">
+          <span class="traj-when">2021 &mdash; start</span>
+          <strong>Web development</strong>
+          <span>SMK Telkom Banjarbaru, Software Engineering &mdash; PHP, MySQL, front-end basics.</span>
+        </div>
+        <div class="traj-step">
+          <span class="traj-when">2023 &mdash; build</span>
+          <strong>Full-stack &amp; apps</strong>
+          <span>Laravel / Blade applications, React front-ends, a Flutter build.</span>
+        </div>
+        <div class="traj-step">
+          <span class="traj-when">now &mdash; break</span>
+          <strong>Cyber security</strong>
+          <span>Mobile and web application security testing, findings written up to be fixed.</span>
+        </div>
+      </div>
+
+      <div class="skills-grid">
+        <div class="about-col about-panel">
+          <h3>Web &amp; Full-Stack &middot; where I started</h3>
+          <ul class="skill-rows">
+            <li><span class="sr-k">frontend</span><span class="sr-v">React.js &middot; Vite &middot; Tailwind CSS &middot; JavaScript</span></li>
+            <li><span class="sr-k">backend</span><span class="sr-v">PHP &middot; Laravel &middot; Blade</span></li>
+            <li><span class="sr-k">database</span><span class="sr-v">MySQL</span></li>
+            <li><span class="sr-k">mobile</span><span class="sr-v">Flutter</span></li>
+            <li><span class="sr-k">shipping</span><span class="sr-v">Git &middot; REST API integration &middot; GitHub Pages deploys</span></li>
+          </ul>
+        </div>
+        <div class="about-col about-panel">
+          <h3>Cyber Security &middot; current focus</h3>
+          <ul class="skill-rows">
+            <li><span class="sr-k">app sec</span><span class="sr-v">Mobile (OWASP MASTG) &middot; Web (OWASP Top 10)</span></li>
+            <li><span class="sr-k">toolkit</span><span class="sr-v">Burp Suite &middot; JADX &middot; Frida &middot; Android Emulator</span></li>
+            <li><span class="sr-k">techniques</span><span class="sr-v">JWT analysis &middot; SQL injection &middot; IDOR &middot; access control &middot; OTP brute force</span></li>
+            <li><span class="sr-k">scripting</span><span class="sr-v">Python &middot; automation &amp; evidence-capture scripts</span></li>
+            <li><span class="sr-k">reporting</span><span class="sr-v">CWE mapping &middot; CVSS v3.1 scoring &middot; structured pentest reports</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="skills-note">
+        Building the apps first is why the security work goes past the scanner output:
+        the web background is what makes a finding land as code a developer can fix.
+      </p>
     </section>
 
     <section id="about" class="section about">
