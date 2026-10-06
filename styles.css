@@ -90,6 +90,17 @@ img { max-width: 100%; }
   pointer-events: none;
   z-index: 0;
 }
+.bg-beam {
+  position: fixed;
+  top: -30%;
+  left: 0;
+  width: 30vw;
+  height: 160vh;
+  background: linear-gradient(90deg, transparent, rgba(94, 234, 212, 0.05), transparent);
+  filter: blur(7px);
+  pointer-events: none;
+  z-index: 0;
+}
 .bg-glow {
   position: fixed;
   top: -32%;
@@ -193,6 +204,33 @@ main, .nav, .footer { position: relative; z-index: 3; }
 .hero-copy { grid-column: 1; grid-row: 1; }
 .hero-side { grid-column: 2; grid-row: 1 / span 2; }
 .term { grid-column: 1; grid-row: 2; }
+.ticker { grid-column: 1 / -1; grid-row: 3; }
+/* ticker: one strip under the hero, the slot the metric row used to fill */
+.ticker {
+  position: relative;
+  overflow: hidden;
+  margin-top: clamp(30px, 4vw, 48px);
+  padding: 12px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+}
+.ticker-track {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: max-content;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--dim);
+  white-space: nowrap;
+  animation: ticker-run 52s linear infinite;
+}
+.ticker:hover .ticker-track { animation-play-state: paused; }
+.tick-sep { color: rgba(94, 234, 212, 0.4); }
 
 .prompt {
   font-family: var(--mono);
@@ -870,6 +908,7 @@ html.boot-out #boot { opacity: 0; transition: opacity 0.3s steps(4); }
 @media (max-width: 1020px) {
   .hero { grid-template-columns: 1fr; gap: 26px; }
   .hero-copy, .hero-side, .term, .ticker { grid-column: 1; grid-row: auto; }
+  .ticker { order: 4; }
   .hero-side { order: 3; }
   .term { order: 2; }
   .idcard-img { min-height: 420px; }
@@ -889,6 +928,7 @@ html.boot-out #boot { opacity: 0; transition: opacity 0.3s steps(4); }
   .sec-num { padding-top: 0; }
 }
 @media (max-width: 560px) {
+  .ticker-track { font-size: 10.5px; letter-spacing: 0.1em; gap: 18px; }
   .nav { gap: 14px; }
   .nav-links { gap: 14px; flex-wrap: wrap; row-gap: 8px; }
   .nav-links a { font-size: 11.5px; }
@@ -961,47 +1001,11 @@ html.boot-out #boot { opacity: 0; transition: opacity 0.3s steps(4); }
 
 .bg-grid { animation: grid-drift 26s linear infinite; }
 .bg-glow { animation: glow-drift 24s ease-in-out infinite alternate; }
-.bg-beam {
-  position: fixed;
-  top: -30%;
-  left: 0;
-  width: 30vw;
-  height: 160vh;
-  background: linear-gradient(90deg, transparent, rgba(94, 234, 212, 0.05), transparent);
-  filter: blur(7px);
-  pointer-events: none;
-  z-index: 0;
-  animation: beam-sweep 15s linear infinite;
-}
+.bg-beam { animation: beam-sweep 15s linear infinite; }
 
-/* ticker: one strip under the hero, the slot the metric row used to fill */
-.ticker {
-  grid-column: 1 / -1;
-  grid-row: 3;
-  position: relative;
-  overflow: hidden;
-  margin-top: clamp(30px, 4vw, 48px);
-  padding: 12px 0;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-}
-.ticker-track {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  width: max-content;
-  font-family: var(--mono);
-  font-size: 11.5px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--dim);
-  white-space: nowrap;
-  animation: ticker-run 52s linear infinite;
-}
+
+.ticker-track { animation: ticker-run 52s linear infinite; }
 .ticker:hover .ticker-track { animation-play-state: paused; }
-.tick-sep { color: rgba(94, 234, 212, 0.4); }
 
 /* the name breathes; the section numbers flicker once per pass */
 .hero h1 { animation: name-flicker 11s steps(1, end) infinite; }
