@@ -34,6 +34,12 @@ npm run watch:css # rebuild on save while styling
 - **Pointer spotlight** (`.spot`): cards and toolkit panels light up under the
   cursor, driven by `--mx`/`--my` set in `app.js`. Only wired for
   `(hover: hover) and (pointer: fine)`, so touch devices get nothing.
+- **Evidence strips on the cards** (`.evidence`): two captures cropped out of the
+  real assessment reports — the analytics replay log and the OTP replay run —
+  with every hostname and response payload blacked out before they were
+  committed. They are the one thing on the page that is not a description of
+  work; the caption labels them and stops there. Targets stay anonymized: no
+  domain, package name, token or account id survives the redaction pass.
 - No third-party artwork is bundled. An earlier pass pasted a reference image;
   it was removed — a reference for the design language is not a file to ship.
 
@@ -45,6 +51,7 @@ npm run watch:css # rebuild on save while styling
 | `src/input.css` | Tailwind source: tokens + custom effect layer |
 | `assets/site.css` | compiled output (committed, do not edit) |
 | `assets/grain.svg` | tiled noise texture for the page surface |
+| `assets/evidence/*.png` | redacted evidence strips shown on the two Android project cards |
 | `app.js` | progressive enhancements — nav highlight, scroll progress, reveal, pointer spotlight, terminal typing, boot splash, motion switch. Content is always visible without JS. |
 | `assets/portrait.jpg` | hero portrait |
 | `assets/favicon.svg` | favicon |

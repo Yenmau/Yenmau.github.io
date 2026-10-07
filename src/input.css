@@ -165,6 +165,62 @@
     );
   }
 
+  /* ---------- evidence strip: the receipt, not the claim ----------
+     A capture cropped out of the actual report, with the hostnames and the
+     response payloads blacked out. The point of the strip is that a visitor
+     reads the run itself (status codes, response times) instead of a sentence
+     about it, so the caption stays a label and never a promise. */
+  .evidence {
+    margin: 0 0 18px;
+    border: 1px solid var(--color-line);
+    background: #070a0f;
+  }
+  .evidence-shot {
+    position: relative;
+    display: block;
+    line-height: 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+  .evidence-shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  /* the corner tag doubles as the affordance: the strip opens full size */
+  .evidence-shot::after {
+    content: "open full size";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    padding: 4px 8px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-dim);
+    background: rgba(6, 8, 13, 0.88);
+    border-left: 1px solid var(--color-line);
+    border-top: 1px solid var(--color-line);
+  }
+  .evidence-shot:hover::after { color: var(--color-accent); }
+  .evidence-cap {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0;
+    padding: 7px 10px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    line-height: 1.5;
+    color: var(--color-dim);
+  }
+  .evidence-cap .redacted {
+    flex: none;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-muted);
+  }
+
   /* ---------- background fx (grid + one glow + the light beam) ---------- */
   .fx-grid {
     background-image:

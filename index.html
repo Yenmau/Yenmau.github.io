@@ -254,10 +254,23 @@
           </div>
           <h3 class="m-0 mb-2.5 text-[17px] font-semibold leading-[1.35] tracking-[-0.01em] text-[#eef4fb]">Android Seller App &mdash; Mobile Pentest</h3>
           <p class="m-0 mb-[18px] text-[14.5px] text-muted">
-            Static and dynamic analysis of an Android seller application following OWASP MASTG.
-            Identified weak OTP brute-force protection (High, CVSS 8.2) and insufficient rate limiting
-            on the analytics endpoint (Medium, CVSS 5.3). <em class="italic text-dim">Target anonymized.</em>
+            Static and dynamic testing of a React Native seller app against OWASP MASTG. Replaying
+            <code class="bg-accent/8 px-1.5 py-px font-mono text-[12.5px] text-accent">POST /dataAnalyses</code>
+            with a rewritten <code class="bg-accent/8 px-1.5 py-px font-mono text-[12.5px] text-accent">accountId</code>
+            / <code class="bg-accent/8 px-1.5 py-px font-mono text-[12.5px] text-accent">companyId</code>
+            kept answering <strong class="font-semibold text-ink">201</strong> &mdash; 400+ events accepted and not one
+            <strong class="font-semibold text-ink">429</strong>, the slowest request burning 11.2 s before it recovered.
+            The login OTP is <strong class="font-semibold text-ink">4 digits</strong> over a ~10-minute window with no
+            lockout or throttling, and a valid code was recovered by replaying attempts before it expired.
+            <em class="italic text-dim">Target anonymized.</em>
           </p>
+
+          <figure class="evidence">
+            <a class="evidence-shot" href="assets/evidence/seller-analytics-abuse.png" target="_blank" rel="noopener">
+              <img src="assets/evidence/seller-analytics-abuse.png" alt="Terminal log of the analytics replay: requests 24 to 26, every response 201, request 24 taking 11.21136 s, request URLs redacted." loading="lazy" decoding="async" width="688" height="509">
+            </a>
+            <figcaption class="evidence-cap"><span>E-001 &middot; replay log, requests 24&ndash;26</span><span class="redacted">redacted</span></figcaption>
+          </figure>
             <ul class="meta m-0 mb-[18px] mt-auto flex list-none flex-col gap-1.5 p-0 font-mono text-[12.5px]">
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">findings</span> 2 (1 high &middot; 1 medium)</li>
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">focus</span> OTP brute force &middot; analytics rate limiting</li>
@@ -279,11 +292,22 @@
           </div>
           <h3 class="m-0 mb-2.5 text-[17px] font-semibold leading-[1.35] tracking-[-0.01em] text-[#eef4fb]">Android Retail App &mdash; Mobile Pentest</h3>
           <p class="m-0 mb-[18px] text-[14.5px] text-muted">
-            Android application security assessment based on OWASP MASTG. Found
-            <code class="bg-accent/8 px-1.5 py-px font-mono text-[12.5px] text-accent">android:allowBackup</code> enabled, potentially exposing application data
-            (Medium, CVSS 4.9), and weak OTP brute-force protection (High, CVSS 8.2).
+            Android assessment against OWASP MASTG.
+            <code class="bg-accent/8 px-1.5 py-px font-mono text-[12.5px] text-accent">android:allowBackup</code>
+            ships as <code class="bg-accent/8 px-1.5 py-px font-mono text-[12.5px] text-accent">true</code>, so
+            <code class="bg-accent/8 px-1.5 py-px font-mono text-[12.5px] text-accent">adb backup</code> lifts the app's
+            data directory &mdash; session tokens included &mdash; off the device with no root. The registration OTP flow
+            applies <strong class="font-semibold text-ink">no throttling or lockout at all</strong> (the forgot-password
+            path does), which leaves the 4-digit, ~10-minute code guessable by scripting.
             <em class="italic text-dim">Target anonymized.</em>
           </p>
+
+          <figure class="evidence">
+            <a class="evidence-shot" href="assets/evidence/retail-otp-bruteforce.png" target="_blank" rel="noopener">
+              <img src="assets/evidence/retail-otp-bruteforce.png" alt="Script output from the OTP replay run: six attempts with status code and elapsed time per attempt, the response bodies redacted." loading="lazy" decoding="async" width="610" height="320">
+            </a>
+            <figcaption class="evidence-cap"><span>E-002 &middot; OTP replay run, payloads redacted</span><span class="redacted">redacted</span></figcaption>
+          </figure>
             <ul class="meta m-0 mb-[18px] mt-auto flex list-none flex-col gap-1.5 p-0 font-mono text-[12.5px]">
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">findings</span> 2 (1 high &middot; 1 medium)</li>
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">focus</span> OTP brute force &middot; allowBackup data exposure</li>
