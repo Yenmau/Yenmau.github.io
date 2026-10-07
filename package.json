@@ -1,0 +1,13 @@
+{
+  "name": "yenmau.github.io",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vincent Tiono — portfolio (static, GitHub Pages). Styling: Tailwind CSS v4.",
+  "scripts": {
+    "build:css": "tailwindcss -i src/input.css -o assets/site.css --minify",
+    "watch:css": "tailwindcss -i src/input.css -o assets/site.css --watch"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3"
+  }
+}

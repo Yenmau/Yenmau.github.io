@@ -1,0 +1,355 @@
+/* ==========================================================================
+   Vincent Tiono — portfolio
+   Concept: "case file" — the terminal/arcade identity kept, but demoted from
+   base layer to accent. Three rules hold the look together:
+     1. one accent (teal) + severity colours (red/amber) — nothing else
+     2. pixel type only for accents; mono for machine text; Inter for prose
+     3. sections numbered 01–04, each with a different shape so nothing repeats
+
+   THIS FILE IS THE TAILWIND SOURCE — everything structural (grid, flex,
+   spacing, type, colour, borders, hover/focus states) lives as utility classes
+   in index.html. What is left here is only what utilities cannot express:
+   the design tokens, four keyframe groups, the pixel-notch clip paths, the
+   glitch/sheen/scan pseudo-element layers, the boot splash and print styles.
+
+   Build:  npm run build:css   ->  assets/site.css  (committed, minified)
+   ========================================================================== */
+
+@import "tailwindcss" source(none);
+@source "../index.html";
+
+@theme {
+  /* surfaces */
+  --color-bg: #06080d;
+  --color-band: #04060a;
+  --color-panel: #0c1119;
+  --color-panel2: #111825;
+  --color-line: #1b2432;
+  --color-line2: #26313f;
+
+  /* text */
+  --color-ink: #e6edf6;
+  --color-bright: #f1f6fc;
+  --color-muted: #97a5b8;
+  --color-dim: #7d8fa3;
+
+  /* accents: teal = brand, red/amber = severity only */
+  --color-accent: #5eead4;
+  --color-crit: #ff6b6b;
+  --color-high: #ffab5e;
+
+  /* type */
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-pixel: "Press Start 2P", "JetBrains Mono", ui-monospace, monospace;
+
+  /* layout */
+  --container-site: 1180px;
+  --spacing-gut: clamp(20px, 5vw, 48px);
+  --spacing-pad-y: clamp(64px, 8vw, 120px);
+
+  /* motion — micro motion stays on, it is the page's whole character */
+  --animate-pulse-dot: pulse 2.4s ease-in-out infinite;
+  --animate-blink: blink 1.1s steps(1) infinite;
+  --animate-scan: scan 5.5s ease-in-out infinite;
+  --animate-tile-pulse: tile-pulse 4.6s ease-in-out infinite;
+  --animate-name-flicker: name-flicker 11s steps(1, end) infinite;
+  --animate-num-flicker: num-flicker 7s steps(1, end) infinite;
+  --animate-grid-drift: grid-drift 26s linear infinite;
+  --animate-glow-drift: glow-drift 24s ease-in-out infinite alternate;
+  --animate-beam-sweep: beam-sweep 15s linear infinite;
+  --animate-ticker-run: ticker-run 52s linear infinite;
+  --animate-boot-in: boot-in 0.14s steps(2) both;
+  --animate-boot-lock: boot-lock 1.5s steps(1) infinite;
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  @keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+  @keyframes scan {
+    0% { transform: translateY(-30%); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(400%); opacity: 0; }
+  }
+  @keyframes tile-pulse {
+    0%, 100% { border-color: var(--color-line2); box-shadow: none; }
+    50% { border-color: rgba(94, 234, 212, 0.38); box-shadow: 0 0 0 1px rgba(94, 234, 212, 0.06); }
+  }
+  @keyframes name-flicker {
+    0%, 89%, 100% { opacity: 1; }
+    90% { opacity: 0.58; }
+    92% { opacity: 1; }
+    94% { opacity: 0.76; }
+    95.5% { opacity: 1; }
+  }
+  @keyframes num-flicker {
+    0%, 86%, 100% { opacity: 1; }
+    91% { opacity: 0.3; }
+  }
+  @keyframes grid-drift {
+    from { background-position: 0 0, 0 0; }
+    to { background-position: 48px 48px, 48px 48px; }
+  }
+  @keyframes glow-drift {
+    0% { transform: translateX(-50%) translateY(0) scale(1); opacity: 1; }
+    50% { transform: translateX(-46%) translateY(20px) scale(1.05); opacity: 0.82; }
+    100% { transform: translateX(-54%) translateY(-12px) scale(0.99); opacity: 1; }
+  }
+  @keyframes beam-sweep {
+    0% { transform: translateX(-40vw) skewX(-8deg); opacity: 0; }
+    14% { opacity: 0.9; }
+    86% { opacity: 0.9; }
+    100% { transform: translateX(110vw) skewX(-8deg); opacity: 0; }
+  }
+  @keyframes ticker-run {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes boot-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes boot-lock {
+    0%, 62% { opacity: 1; filter: drop-shadow(0 0 10px rgba(94, 234, 212, 0.65)); }
+    63%, 71% { opacity: 0.25; filter: none; }
+    72%, 100% { opacity: 1; filter: drop-shadow(0 0 10px rgba(94, 234, 212, 0.65)); }
+  }
+}
+
+@layer base {
+  ::selection { background: rgba(94, 234, 212, 0.26); color: #fff; }
+  :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+}
+
+@layer components {
+  /* ---------- the pixel notch: the one motif kept from the arcade pass ----------
+     clip-path cuts outer shadows, so hover answers with border + fill instead. */
+  .notch {
+    border-radius: 0;
+    clip-path: polygon(
+      0 5px, 5px 5px, 5px 0,
+      calc(100% - 5px) 0, calc(100% - 5px) 5px, 100% 5px,
+      100% calc(100% - 5px), calc(100% - 5px) calc(100% - 5px), calc(100% - 5px) 100%,
+      5px 100%, 5px calc(100% - 5px), 0 calc(100% - 5px)
+    );
+  }
+  .notch-lg {
+    border-radius: 0;
+    clip-path: polygon(
+      0 8px, 8px 8px, 8px 0,
+      calc(100% - 8px) 0, calc(100% - 8px) 8px, 100% 8px,
+      100% calc(100% - 8px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%,
+      8px 100%, 8px calc(100% - 8px), 0 calc(100% - 8px)
+    );
+  }
+  /* same cut, but the project panels drop it on narrow screens — at that width
+     the cut corners eat more than they give (the framed photo and the terminal
+     keep theirs). */
+  .notch-card {
+    border-radius: 0;
+    clip-path: polygon(
+      0 8px, 8px 8px, 8px 0,
+      calc(100% - 8px) 0, calc(100% - 8px) 8px, 100% 8px,
+      100% calc(100% - 8px), calc(100% - 8px) calc(100% - 8px), calc(100% - 8px) 100%,
+      8px 100%, 8px calc(100% - 8px), 0 calc(100% - 8px)
+    );
+  }
+
+  /* ---------- background fx (grid + one glow + the light beam) ---------- */
+  .fx-grid {
+    background-image:
+      linear-gradient(rgba(94, 234, 212, 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(94, 234, 212, 0.045) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse 90% 55% at 50% 0%, #000 0%, transparent 76%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 55% at 50% 0%, #000 0%, transparent 76%);
+  }
+  .fx-glow {
+    background: radial-gradient(circle, rgba(94, 234, 212, 0.11), rgba(94, 234, 212, 0.03) 45%, transparent 72%);
+    filter: blur(24px);
+  }
+  .fx-beam {
+    background: linear-gradient(90deg, transparent, rgba(94, 234, 212, 0.05), transparent);
+    filter: blur(7px);
+  }
+  /* the boot splash reuses the same two looks, at a coarser grid */
+  .fx-grid-coarse {
+    background-image:
+      linear-gradient(rgba(94, 234, 212, 0.09) 2px, transparent 2px),
+      linear-gradient(90deg, rgba(94, 234, 212, 0.09) 2px, transparent 2px);
+    background-size: 32px 32px, 32px 32px;
+    mask-image: radial-gradient(ellipse 72% 62% at 50% 50%, #000 0%, transparent 76%);
+    -webkit-mask-image: radial-gradient(ellipse 72% 62% at 50% 50%, #000 0%, transparent 76%);
+  }
+  .fx-scanlines {
+    background: repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.055) 0 2px, transparent 2px 4px);
+    mix-blend-mode: overlay;
+  }
+
+  /* ---------- caret (the blinking cursor after machine text) ---------- */
+  .caret {
+    display: inline-block;
+    width: 8px;
+    height: 1.05em;
+    margin-left: 5px;
+    background: var(--color-accent);
+    vertical-align: -2px;
+  }
+
+  /* ---------- glitch: the name tears in two on hover ---------- */
+  .glitch { position: relative; }
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.12s;
+  }
+  .glitch::before { color: var(--color-accent); transform: translate(-2px, -1px); }
+  .glitch::after { color: #ff5fa2; transform: translate(2px, 1px); }
+  .glitch:hover::before,
+  .glitch:hover::after { opacity: 0.5; }
+
+  /* ---------- nav link brackets (state comes from JS .is-active) ---------- */
+  .navlink::before { content: "["; color: var(--color-dim); opacity: 0; margin-right: 3px; transition: opacity 0.18s; }
+  .navlink::after { content: "]"; color: var(--color-dim); opacity: 0; margin-left: 3px; transition: opacity 0.18s; }
+  .navlink:hover::before, .navlink:hover::after,
+  .navlink.is-active::before, .navlink.is-active::after { opacity: 1; }
+
+  /* ---------- ticker: the strip pauses while you read it ---------- */
+  .ticker {
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
+  }
+  .ticker:hover .ticker-track { animation-play-state: paused; }
+
+  /* ---------- card sheen: a light sweep crosses a project card on hover ---------- */
+  .sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 42%, rgba(94, 234, 212, 0.07) 50%, transparent 58%);
+    transform: translateX(-130%);
+    transition: transform 0.75s ease;
+    pointer-events: none;
+  }
+  .sheen:hover::after { transform: translateX(130%); }
+
+  /* ---------- portrait grade ---------- */
+  .idcard-tint {
+    background:
+      linear-gradient(180deg, rgba(6, 8, 13, 0.08) 0%, rgba(6, 8, 13, 0.6) 100%),
+      radial-gradient(120% 80% at 78% 12%, rgba(94, 234, 212, 0.1), transparent 60%);
+  }
+
+  /* ---------- artwork slot: dark-grades whatever image is dropped in ---------- */
+  .banner-tint {
+    background:
+      linear-gradient(180deg, rgba(6, 8, 13, 0.62) 0%, rgba(6, 8, 13, 0.04) 38%, rgba(6, 8, 13, 0.78) 100%),
+      radial-gradient(120% 90% at 50% 105%, rgba(94, 234, 212, 0.1), transparent 62%);
+  }
+
+  /* ---------- reveal ----------
+     The hidden state is added BY app.js (.pre), never by CSS alone, so if the
+     script fails to load nothing is ever invisible. */
+  html.js .reveal.pre { opacity: 0; transform: translateY(16px); }
+  html.js .reveal.in {
+    opacity: 1;
+    transform: none;
+    transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  /* ---------- terminal lines arrive one after another (class added by JS) ---------- */
+  .term-body.typing .trow,
+  .term-body.typing .tline {
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.34s ease, transform 0.34s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .term-body.typing .typed { opacity: 1; transform: none; }
+
+  /* ---------- footer motion switch ---------- */
+  .motion-toggle {
+    background: none;
+    cursor: pointer;
+    transition: color 0.18s ease, border-color 0.18s ease;
+  }
+  .motion-toggle:hover,
+  .motion-toggle[aria-pressed="true"] {
+    color: var(--color-accent);
+    border-color: rgba(94, 234, 212, 0.5);
+  }
+
+  /* ---------- boot splash (pixel/arcade loading screen) ---------- */
+  #boot { display: none; }
+  html.booting { overflow: hidden; }
+  html.booting #boot {
+    display: flex;
+    animation: var(--animate-boot-in);
+  }
+  html.boot-out #boot { opacity: 0; transition: opacity 0.3s steps(4); }
+  .boot-frame {
+    box-shadow:
+      0 0 0 2px #05070b,
+      0 0 0 4px rgba(94, 234, 212, 0.16),
+      0 0 38px -8px rgba(94, 234, 212, 0.5);
+  }
+  .boot-name { text-shadow: 2px 2px 0 rgba(255, 95, 162, 0.5); }
+  .boot-bar {
+    display: grid;
+    grid-template-columns: repeat(20, 1fr);
+    gap: 3px;
+    width: min(340px, 74vw);
+  }
+  .boot-bar i {
+    display: block;
+    height: 16px;
+    background: rgba(94, 234, 212, 0.1);
+    box-shadow: inset 0 0 0 1px rgba(94, 234, 212, 0.2);
+  }
+  .boot-bar i.on {
+    background: var(--color-accent);
+    box-shadow: 0 0 9px rgba(94, 234, 212, 0.75);
+  }
+  .boot-lock path { fill: var(--color-accent); }
+}
+
+/* ---------- responsive shapes ----------
+   Below 760px the project panels lose their clip-path: at that width the cut
+   corners eat more than they give. The framed photo, the terminal and the
+   artwork banner keep theirs. */
+@media (max-width: 760px) {
+  .notch-card { clip-path: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  /* Only LARGE-AREA motion is switched off: background drift, the light beam and the
+     ticker scroll. Micro-motion (caret, status dot, REC dot, portrait scan, tile pulse,
+     name flicker, terminal typing, card stagger) stays — it is opacity/1px-level, and it
+     is the page's whole character. This laptop reports `reduce` only because Windows
+     animations are off (MinAnimate=0), so a blanket kill would hand the owner a poster.
+     The footer switch `motion: full` turns even this large-area layer back on. */
+  html:not(.motion-full) .fx-grid,
+  html:not(.motion-full) .fx-glow,
+  html:not(.motion-full) .fx-beam,
+  html:not(.motion-full) .ticker-track { animation: none; }
+  html:not(.motion-full) .ticker-track { transform: none; }
+  .term-body.typing .trow,
+  .term-body.typing .tline { transform: none; }
+  html.js .reveal.pre { opacity: 1; transform: none; }
+  html.js .reveal.in { transition: none; }
+}
+
+@media print {
+  .fx-grid, .fx-glow, .fx-beam, .ticker, .progress, #boot, .nav, .skip { display: none !important; }
+  body { background: #fff; color: #000; }
+  .card, .about-panel, .traj { border-color: #ccc; }
+}
