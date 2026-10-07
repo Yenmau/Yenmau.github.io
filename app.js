@@ -91,6 +91,19 @@
     window.setTimeout(function () { pending.forEach(settle); pending = []; }, 8000);
   }
 
+  // Pointer spotlight: a block lights up where the cursor is (.spot::before reads
+  // --mx/--my). Purely cosmetic, and only wired up for a real hovering pointer, so
+  // touch devices and no-JS loads simply never get a spotlight - nothing is hidden.
+  if (window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll('.spot').forEach(function (el) {
+      el.addEventListener('pointermove', function (e) {
+        var r = el.getBoundingClientRect();
+        el.style.setProperty('--mx', (((e.clientX - r.left) / r.width) * 100).toFixed(2) + '%');
+        el.style.setProperty('--my', (((e.clientY - r.top) / r.height) * 100).toFixed(2) + '%');
+      }, { passive: true });
+    });
+  }
+
   // Terminal lines type in one after another. The hidden state lives behind a class
   // this file adds (never CSS alone), and the clean-up timeout is registered BEFORE
   // the loop, so even a throw mid-sequence can only ever leave the lines visible.

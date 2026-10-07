@@ -61,6 +61,7 @@
   --animate-ticker-run: ticker-run 52s linear infinite;
   --animate-boot-in: boot-in 0.14s steps(2) both;
   --animate-boot-lock: boot-lock 1.5s steps(1) infinite;
+  --animate-saber-hum: saber-hum 3.6s ease-in-out infinite;
 
   @keyframes pulse {
     0%, 100% { opacity: 1; }
@@ -118,6 +119,10 @@
     0%, 62% { opacity: 1; filter: drop-shadow(0 0 10px rgba(94, 234, 212, 0.65)); }
     63%, 71% { opacity: 0.25; filter: none; }
     72%, 100% { opacity: 1; filter: drop-shadow(0 0 10px rgba(94, 234, 212, 0.65)); }
+  }
+  @keyframes saber-hum {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.87; }
   }
 }
 
@@ -249,22 +254,69 @@
       radial-gradient(120% 80% at 78% 12%, rgba(94, 234, 212, 0.1), transparent 60%);
   }
 
-  /* ---------- built-in motif: the razor-wire rule ----------
-     The site's own decoration, drawn in the page's geometry — a straight strand,
-     chevron twists and square-set barbs — as a 240x16 tile that repeats along an
-     edge. It replaces the plain 1px rule above every section head and above the
-     footer, so a section boundary reads as a cut rather than a hairline.
-     The crimson variant carries the severity temperature; it is used once, above
-     the projects section, where the red finding chips already live. */
-  .wire-band {
-    height: 24px;
-    background-image: url("wire.svg");
-    background-repeat: repeat-x;
-    background-position: left center;
-    background-size: 240px 16px;
-    opacity: 0.8;
+  /* ---------- section rule: the light-saber blade ----------
+     Every section boundary is a blade: a white-hot core fading out at both
+     ends, sitting on a teal bloom. It replaces the plain 1px rule, so a section
+     starts with a cut that carries energy instead of a hairline. Keep it to the
+     boundaries — one blade per edge, never two lines a few pixels apart. */
+  .saber {
+    position: relative;
+    height: 2px;
+    background: linear-gradient(90deg,
+      rgba(94, 234, 212, 0) 0%,
+      rgba(233, 255, 251, 0.95) 50%,
+      rgba(94, 234, 212, 0) 100%);
+    animation: var(--animate-saber-hum);
   }
-  .wire-band-crimson { background-image: url("wire-crimson.svg"); }
+  /* the bloom is a masked gradient, not a box-shadow: a shadow gets cut off dead
+     at the element's box, which left hard vertical edges at both ends of the blade */
+  .saber::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -9px;
+    height: 20px;
+    background: linear-gradient(180deg,
+      rgba(94, 234, 212, 0) 0%,
+      rgba(94, 234, 212, 0.55) 50%,
+      rgba(94, 234, 212, 0) 100%);
+    filter: blur(4px);
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, #000 10%, #000 90%, transparent 100%);
+    pointer-events: none;
+  }
+
+  /* ---------- surface: film grain + vignette ----------
+     Both sit under the content (z-1) and above the moving background layers, so
+     the page stops being a perfectly flat dark field. Grain uses a tiled noise
+     SVG at low opacity with a soft-light blend; the vignette is a radial fade
+     that pulls the eye toward the middle of the viewport. */
+  .grain {
+    background-image: url("grain.svg");
+    background-size: 180px 180px;
+    opacity: 0.32;
+    mix-blend-mode: soft-light;
+  }
+  .vignette {
+    background: radial-gradient(130% 100% at 50% 12%, transparent 52%, rgba(0, 0, 0, 0.55) 100%);
+  }
+
+  /* ---------- pointer spotlight ----------
+     The block lights up where the cursor is (--mx/--my are set by app.js). With
+     no JS the variables stay unset, so the gradient just sits at the fallback
+     centre and the block still looks intentional. */
+  .spot::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(94, 234, 212, 0.11), transparent 62%);
+  }
+  .spot:hover::before { opacity: 1; }
 
   /* ---------- reveal ----------
      The hidden state is added BY app.js (.pre), never by CSS alone, so if the
@@ -333,12 +385,12 @@
 
 /* ---------- responsive shapes ----------
    Below 760px the project panels lose their clip-path: at that width the cut
-   corners eat more than they give. The framed photo, the terminal and the
-   razor-wire rules keep theirs; the wire itself thins out and spaces out so it
-   reads as a cut instead of texture. */
+   corners eat more than they give. The framed photo and the terminal keep theirs. */
 @media (max-width: 760px) {
   .notch-card { clip-path: none; }
-  .wire-band { opacity: 0.65; background-size: 320px 16px; }
+  /* a smaller bloom on small screens: the blade stays crisp, the haze does not
+     wash the block underneath */
+  .saber::before { top: -6px; height: 14px; opacity: 0.85; }
 }
 
 @media (prefers-reduced-motion: reduce) {

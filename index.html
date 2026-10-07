@@ -31,6 +31,8 @@
   <div class="fx-grid animate-grid-drift pointer-events-none fixed inset-0 z-0" aria-hidden="true"></div>
   <div class="fx-glow animate-glow-drift pointer-events-none fixed -top-[32%] left-1/2 z-0 h-[780px] w-[1100px] -translate-x-1/2" aria-hidden="true"></div>
   <div class="fx-beam animate-beam-sweep pointer-events-none fixed -top-[30%] left-0 z-0 h-[160vh] w-[30vw]" aria-hidden="true"></div>
+  <div class="grain pointer-events-none fixed inset-0 z-[1]" aria-hidden="true"></div>
+  <div class="vignette pointer-events-none fixed inset-0 z-[1]" aria-hidden="true"></div>
 
   <div id="boot" aria-hidden="true" class="fixed inset-0 z-[90] items-center justify-center bg-[#05070b]">
     <div class="fx-grid-coarse pointer-events-none absolute inset-0"></div>
@@ -180,8 +182,8 @@
     </section>
 
     <section id="projects" class="section mx-auto max-w-site px-gut py-pad-y">
-      <div class="wire-band wire-band-crimson" aria-hidden="true"></div>
-      <div class="section-head mb-[34px] grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-[22px] gap-y-[18px] pt-[18px] max-[760px]:grid-cols-1 max-[760px]:gap-x-2 max-[760px]:gap-y-2">
+      <div class="saber" aria-hidden="true"></div>
+      <div class="section-head mb-[34px] grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-[22px] gap-y-[18px] pt-[22px] max-[760px]:grid-cols-1 max-[760px]:gap-x-2 max-[760px]:gap-y-2">
         <span class="sec-num animate-num-flicker pt-1.5 font-pixel text-[13px] leading-[1.4] text-accent max-[760px]:pt-0" aria-hidden="true">01</span>
         <div class="sec-text">
           <h2 class="m-0 mb-2.5 font-sans text-[clamp(26px,3.6vw,38px)] font-bold leading-[1.1] tracking-[-0.03em] text-bright">selected projects</h2>
@@ -192,7 +194,7 @@
 
       <div class="cards grid grid-cols-2 gap-[18px] max-[760px]:grid-cols-1">
         <!-- Juice Shop -->
-        <article class="card reveal sheen notch-card relative flex flex-col border border-line bg-gradient-to-b from-panel to-panel2 p-[22px_22px_20px] transition duration-200 hover:-translate-y-[3px] hover:border-line2">
+        <article class="card reveal sheen spot notch-card relative flex flex-col border border-line bg-gradient-to-b from-panel to-panel2 p-[22px_22px_20px] transition duration-200 hover:-translate-y-[3px] hover:border-line2">
           <div class="card-top mb-3.5 flex flex-wrap items-center gap-2">
             <span class="card-idx mr-auto font-mono text-[11px] text-dim">01</span>
             <span class="chip notch chip-web whitespace-nowrap border border-line bg-white/[0.03] px-[9px] py-1 font-mono text-[10.5px] uppercase tracking-[0.04em] text-muted">Web</span>
@@ -207,7 +209,7 @@
             authentication / authorization bypasses (JWT signing-key forgery, mass-assignment to admin).
             Reported through a structured pentest report.
           </p>
-          <ul class="meta m-0 mb-[18px] mt-auto flex list-none flex-col gap-1.5 p-0 font-mono text-[12.5px]">
+            <ul class="meta m-0 mb-[18px] mt-auto flex list-none flex-col gap-1.5 p-0 font-mono text-[12.5px]">
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">findings</span> 11 (2 critical)</li>
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">cwes</span> CWE-321 &middot; 915 &middot; 89 &middot; 639 &middot; 347</li>
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">lab</span> Docker &middot; Juice Shop 20.1.1</li>
@@ -219,7 +221,7 @@
         </article>
 
         <!-- Maumau -->
-        <article class="card reveal sheen notch-card relative flex flex-col border border-line bg-gradient-to-b from-panel to-panel2 p-[22px_22px_20px] transition duration-200 hover:-translate-y-[3px] hover:border-line2">
+        <article class="card reveal sheen spot notch-card relative flex flex-col border border-line bg-gradient-to-b from-panel to-panel2 p-[22px_22px_20px] transition duration-200 hover:-translate-y-[3px] hover:border-line2">
           <div class="card-top mb-3.5 flex flex-wrap items-center gap-2">
             <span class="card-idx mr-auto font-mono text-[11px] text-dim">02</span>
             <span class="chip notch chip-web whitespace-nowrap border border-line bg-white/[0.03] px-[9px] py-1 font-mono text-[10.5px] uppercase tracking-[0.04em] text-muted">Web</span>
@@ -232,7 +234,7 @@
             credential-exposure incident along the way &mdash; removed a committed secret from the repo
             and rewrote git history.
           </p>
-          <ul class="meta m-0 mb-[18px] mt-auto flex list-none flex-col gap-1.5 p-0 font-mono text-[12.5px]">
+            <ul class="meta m-0 mb-[18px] mt-auto flex list-none flex-col gap-1.5 p-0 font-mono text-[12.5px]">
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">stack</span> React &middot; Vite &middot; Tailwind</li>
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">api</span> TMDB</li>
           </ul>
@@ -243,7 +245,7 @@
         </article>
 
         <!-- Seller app -->
-        <article class="card reveal sheen notch-card relative flex flex-col border border-line bg-gradient-to-b from-panel to-panel2 p-[22px_22px_20px] transition duration-200 hover:-translate-y-[3px] hover:border-line2">
+        <article class="card reveal sheen spot notch-card relative flex flex-col border border-line bg-gradient-to-b from-panel to-panel2 p-[22px_22px_20px] transition duration-200 hover:-translate-y-[3px] hover:border-line2">
           <div class="card-top mb-3.5 flex flex-wrap items-center gap-2">
             <span class="card-idx mr-auto font-mono text-[11px] text-dim">03</span>
             <span class="chip notch chip-mob whitespace-nowrap border border-line bg-white/[0.03] px-[9px] py-1 font-mono text-[10.5px] uppercase tracking-[0.04em] text-muted">Mobile</span>
@@ -256,7 +258,7 @@
             Identified weak OTP brute-force protection (High, CVSS 8.2) and insufficient rate limiting
             on the analytics endpoint (Medium, CVSS 5.3). <em class="italic text-dim">Target anonymized.</em>
           </p>
-          <ul class="meta m-0 mb-[18px] mt-auto flex list-none flex-col gap-1.5 p-0 font-mono text-[12.5px]">
+            <ul class="meta m-0 mb-[18px] mt-auto flex list-none flex-col gap-1.5 p-0 font-mono text-[12.5px]">
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">findings</span> 2 (1 high &middot; 1 medium)</li>
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">focus</span> OTP brute force &middot; analytics rate limiting</li>
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">standard</span> OWASP MASTG</li>
@@ -268,7 +270,7 @@
         </article>
 
         <!-- Retail app -->
-        <article class="card reveal sheen notch-card relative flex flex-col border border-line bg-gradient-to-b from-panel to-panel2 p-[22px_22px_20px] transition duration-200 hover:-translate-y-[3px] hover:border-line2">
+        <article class="card reveal sheen spot notch-card relative flex flex-col border border-line bg-gradient-to-b from-panel to-panel2 p-[22px_22px_20px] transition duration-200 hover:-translate-y-[3px] hover:border-line2">
           <div class="card-top mb-3.5 flex flex-wrap items-center gap-2">
             <span class="card-idx mr-auto font-mono text-[11px] text-dim">04</span>
             <span class="chip notch chip-mob whitespace-nowrap border border-line bg-white/[0.03] px-[9px] py-1 font-mono text-[10.5px] uppercase tracking-[0.04em] text-muted">Mobile</span>
@@ -282,7 +284,7 @@
             (Medium, CVSS 4.9), and weak OTP brute-force protection (High, CVSS 8.2).
             <em class="italic text-dim">Target anonymized.</em>
           </p>
-          <ul class="meta m-0 mb-[18px] mt-auto flex list-none flex-col gap-1.5 p-0 font-mono text-[12.5px]">
+            <ul class="meta m-0 mb-[18px] mt-auto flex list-none flex-col gap-1.5 p-0 font-mono text-[12.5px]">
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">findings</span> 2 (1 high &middot; 1 medium)</li>
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">focus</span> OTP brute force &middot; allowBackup data exposure</li>
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">standard</span> OWASP MASTG</li>
@@ -302,8 +304,8 @@
     </section>
 
     <section id="toolkit" class="section band relative mx-auto max-w-site px-gut py-pad-y before:absolute before:inset-y-0 before:left-1/2 before:-z-10 before:w-screen before:-translate-x-1/2 before:border-y before:border-line before:bg-band before:content-['']">
-      <div class="wire-band" aria-hidden="true"></div>
-      <div class="section-head mb-[34px] grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-[22px] gap-y-[18px] pt-[18px] max-[760px]:grid-cols-1 max-[760px]:gap-x-2 max-[760px]:gap-y-2">
+      <div class="saber" aria-hidden="true"></div>
+      <div class="section-head mb-[34px] grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-[22px] gap-y-[18px] pt-[22px] max-[760px]:grid-cols-1 max-[760px]:gap-x-2 max-[760px]:gap-y-2">
         <span class="sec-num animate-num-flicker pt-1.5 font-pixel text-[13px] leading-[1.4] text-accent max-[760px]:pt-0" aria-hidden="true">02</span>
         <div class="sec-text">
           <h2 class="m-0 mb-2.5 font-sans text-[clamp(26px,3.6vw,38px)] font-bold leading-[1.1] tracking-[-0.03em] text-bright">toolkit</h2>
@@ -312,7 +314,7 @@
       </div>
 
       <div class="tools grid grid-cols-3 items-stretch gap-[18px] max-[760px]:grid-cols-1">
-        <div class="tool-group notch-card flex flex-col border border-line bg-gradient-to-b from-panel to-panel2 px-5 pb-[18px] pt-5">
+        <div class="tool-group spot notch-card flex flex-col border border-line bg-gradient-to-b from-panel to-panel2 px-5 pb-[18px] pt-5">
           <p class="tools-label m-0 mb-2.5 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.12em] text-accent after:h-px after:flex-1 after:bg-gradient-to-r after:from-line after:to-transparent after:content-['']">security &amp; testing</p>
           <ul class="tool-list m-0 list-none p-0">
             <li class="tool-row group flex items-center gap-3 border-b border-line py-[7px] last:border-b-0 last:pb-0">
@@ -346,7 +348,7 @@
           </ul>
         </div>
 
-        <div class="tool-group notch-card flex flex-col border border-line bg-gradient-to-b from-panel to-panel2 px-5 pb-[18px] pt-5">
+        <div class="tool-group spot notch-card flex flex-col border border-line bg-gradient-to-b from-panel to-panel2 px-5 pb-[18px] pt-5">
           <p class="tools-label m-0 mb-2.5 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.12em] text-accent after:h-px after:flex-1 after:bg-gradient-to-r after:from-line after:to-transparent after:content-['']">learning this semester</p>
           <ul class="tool-list m-0 list-none p-0">
             <li class="tool-row group flex items-center gap-3 border-b border-line py-[7px] last:border-b-0 last:pb-0">
@@ -368,7 +370,7 @@
           </p>
         </div>
 
-        <div class="tool-group notch-card flex flex-col border border-line bg-gradient-to-b from-panel to-panel2 px-5 pb-[18px] pt-5">
+        <div class="tool-group spot notch-card flex flex-col border border-line bg-gradient-to-b from-panel to-panel2 px-5 pb-[18px] pt-5">
           <p class="tools-label m-0 mb-2.5 flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.12em] text-accent after:h-px after:flex-1 after:bg-gradient-to-r after:from-line after:to-transparent after:content-['']">build stack</p>
           <ul class="tool-list m-0 list-none p-0">
             <li class="tool-row group flex items-center gap-3 border-b border-line py-[7px] last:border-b-0 last:pb-0">
@@ -421,8 +423,8 @@
     </section>
 
     <section id="skills" class="section mx-auto max-w-site px-gut py-pad-y">
-      <div class="wire-band" aria-hidden="true"></div>
-      <div class="section-head mb-[34px] grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-[22px] gap-y-[18px] pt-[18px] max-[760px]:grid-cols-1 max-[760px]:gap-x-2 max-[760px]:gap-y-2">
+      <div class="saber" aria-hidden="true"></div>
+      <div class="section-head mb-[34px] grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-[22px] gap-y-[18px] pt-[22px] max-[760px]:grid-cols-1 max-[760px]:gap-x-2 max-[760px]:gap-y-2">
         <span class="sec-num animate-num-flicker pt-1.5 font-pixel text-[13px] leading-[1.4] text-accent max-[760px]:pt-0" aria-hidden="true">03</span>
         <div class="sec-text">
           <h2 class="m-0 mb-2.5 font-sans text-[clamp(26px,3.6vw,38px)] font-bold leading-[1.1] tracking-[-0.03em] text-bright">skills &amp; background</h2>
@@ -492,8 +494,8 @@
     </section>
 
     <section id="about" class="section about mx-auto max-w-site px-gut py-pad-y">
-      <div class="wire-band" aria-hidden="true"></div>
-      <div class="section-head mb-[34px] grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-[22px] gap-y-[18px] pt-[18px] max-[760px]:grid-cols-1 max-[760px]:gap-x-2 max-[760px]:gap-y-2">
+      <div class="saber" aria-hidden="true"></div>
+      <div class="section-head mb-[34px] grid grid-cols-[auto_minmax(0,1fr)] items-start gap-x-[22px] gap-y-[18px] pt-[22px] max-[760px]:grid-cols-1 max-[760px]:gap-x-2 max-[760px]:gap-y-2">
         <span class="sec-num animate-num-flicker pt-1.5 font-pixel text-[13px] leading-[1.4] text-accent max-[760px]:pt-0" aria-hidden="true">04</span>
         <div class="sec-text">
           <h2 class="m-0 mb-2.5 font-sans text-[clamp(26px,3.6vw,38px)] font-bold leading-[1.1] tracking-[-0.03em] text-bright">about</h2>
@@ -523,7 +525,7 @@
   </main>
 
   <footer class="footer relative z-[3] mx-auto max-w-site px-gut pb-10 before:absolute before:inset-y-0 before:left-1/2 before:-z-10 before:w-screen before:-translate-x-1/2 before:bg-band before:content-['']">
-    <div class="wire-band" aria-hidden="true"></div>
+    <div class="saber" aria-hidden="true"></div>
     <div class="footer-cta border-b border-line pb-[34px] pt-[clamp(44px,6vw,72px)]">
       <p class="fc-prompt m-0 mb-2.5 font-mono text-[12.5px] tracking-[0.06em] text-dim"><span class="text-accent">$</span> contact --now</p>
       <a class="fc-mail inline-block break-all border-b border-line2 pb-1 font-mono text-[clamp(22px,4vw,40px)] font-medium tracking-[-0.02em] text-bright no-underline transition-colors hover:border-accent hover:text-accent" href="mailto:vinotiono@gmail.com">vinotiono@gmail.com</a>
