@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth scroll-pt-[84px]">
+<html lang="en" class="scroll-smooth scroll-pt-[16px]">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -67,7 +67,7 @@
 
   <div class="progress pointer-events-none fixed left-0 right-0 top-0 z-[60] h-0.5" aria-hidden="true"><i class="block h-full w-0 bg-gradient-to-r from-accent/20 to-accent shadow-[0_0_10px_rgba(94,234,212,0.7)]"></i></div>
 
-  <header class="nav sticky top-0 z-[3] mx-auto flex max-w-site items-center gap-x-[22px] border-b border-line bg-bg/82 px-gut pb-[15px] pt-[calc(16px+env(safe-area-inset-top))] backdrop-blur-[12px] max-[760px]:flex-wrap max-[760px]:gap-y-2.5 max-[560px]:gap-x-3.5 max-[560px]:gap-y-3.5">
+  <header class="nav relative z-[3] mx-auto flex max-w-site items-center gap-x-[22px] border-b border-line bg-bg px-gut pb-[15px] pt-[calc(16px+env(safe-area-inset-top))] max-[760px]:flex-wrap max-[760px]:gap-y-2.5 max-[560px]:gap-x-3.5 max-[560px]:gap-y-3.5">
     <a class="inline-flex items-center gap-[9px] font-pixel text-[9px] leading-[1.4] tracking-[0.02em] text-ink no-underline max-[560px]:text-[8px]" href="#top">
       <span class="dot h-[7px] w-[7px] animate-pulse-dot bg-accent shadow-[0_0_10px_#5eead4]"></span>
       <span class="brand-text">vincent<span class="text-dim">@</span>security</span>
@@ -223,6 +223,13 @@
             authentication / authorization bypasses (JWT signing-key forgery, mass-assignment to admin).
             Reported through a structured pentest report.
           </p>
+
+          <figure class="evidence">
+            <a class="evidence-shot" href="assets/evidence/juiceshop-sqli-login.png" target="_blank" rel="noopener">
+              <img src="assets/evidence/juiceshop-sqli-login.png" alt="Redacted evidence panel: SQL injection authentication bypass — the payload ' OR 1=1-- returns 200 OK with a token while ' AND 1=2-- returns 401, and the returned token was accepted by /rest/user/whoami." loading="lazy" decoding="async" width="1864" height="862">
+            </a>
+            <figcaption class="evidence-cap"><span>E-001 &middot; SQLi login bypass, true vs false condition</span><span class="redacted">redacted</span></figcaption>
+          </figure>
             <ul class="meta m-0 mb-[18px] mt-auto flex list-none flex-col gap-1.5 p-0 font-mono text-[12.5px]">
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">findings</span> 11 (2 critical)</li>
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">cwes</span> CWE-321 &middot; 915 &middot; 89 &middot; 639 &middot; 347</li>
@@ -248,6 +255,13 @@
             credential-exposure incident along the way &mdash; removed a committed secret from the repo
             and rewrote git history.
           </p>
+
+          <figure class="evidence">
+            <a class="evidence-shot" href="assets/evidence/maumau-catalog.jpg" target="_blank" rel="noopener">
+              <img src="assets/evidence/maumau-catalog.jpg" alt="The Maumau catalogue running: search field, genre picker and a grid of TMDB posters with titles and ratings." loading="lazy" decoding="async" width="1200" height="750">
+            </a>
+            <figcaption class="evidence-cap"><span>live build &middot; catalogue, TMDB results</span><span class="tag">not a mockup</span></figcaption>
+          </figure>
             <ul class="meta m-0 mb-[18px] mt-auto flex list-none flex-col gap-1.5 p-0 font-mono text-[12.5px]">
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">stack</span> React &middot; Vite &middot; Tailwind</li>
             <li class="grid grid-cols-[78px_minmax(0,1fr)]"><span class="k text-dim">api</span> TMDB</li>

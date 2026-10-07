@@ -216,7 +216,8 @@
     line-height: 1.5;
     color: var(--color-dim);
   }
-  .evidence-cap .redacted {
+  .evidence-cap .redacted,
+  .evidence-cap .tag {
     flex: none;
     text-transform: uppercase;
     letter-spacing: 0.08em;
