@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>404 — Vincent Tiono</title>
+  <meta name="robots" content="noindex" />
+  <meta name="theme-color" content="#06080d" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Press+Start+2P&display=swap" />
+  <!-- same compiled sheet as the page (Tailwind v4 output of src/input.css) -->
+  <link rel="stylesheet" href="assets/site.css" />
+  <script>
+    // The 404 body is a request/response pair, so the path comes from the URL.
+    // Written with textContent, never innerHTML, and truncated: the path is
+    // attacker-controlled input and must not be able to inject markup.
+    document.documentElement.classList.add('js');
+    window.addEventListener('DOMContentLoaded', function () {
+      var p = (location.pathname || '/') + location.search;
+      if (p.length > 90) p = p.slice(0, 90) + '\u2026';
+      var el = document.getElementById('req-path');
+      if (el) el.textContent = p;
+    });
+  </script>
+</head>
+<body class="m-0 min-h-screen overflow-x-hidden bg-bg font-sans text-base leading-[1.72] text-ink antialiased">
+  <div class="fx-grid pointer-events-none fixed inset-0 z-0" aria-hidden="true"></div>
+  <div class="grain pointer-events-none fixed inset-0 z-[1]" aria-hidden="true"></div>
+  <div class="vignette pointer-events-none fixed inset-0 z-[1]" aria-hidden="true"></div>
+
+  <main class="relative z-[3] mx-auto flex min-h-screen max-w-site flex-col justify-center px-gut py-[clamp(36px,7vw,76px)]">
+    <div class="saber" aria-hidden="true"></div>
+
+    <p class="mt-8 font-mono text-[12.5px] tracking-[0.06em] text-dim" aria-hidden="true"><span class="text-accent">$</span> curl https://yenmau.github.io<span id="req-path">/</span></p>
+
+    <pre class="mt-4 overflow-x-auto font-mono text-[13px] leading-[1.7] text-muted">HTTP/2 404
+content-type: text/html; charset=utf-8
+server: github-pages
+
+{
+  "error": "no route here",
+  "hint": "the page moved, or it never existed"
+}</pre>
+
+    <h1 class="mt-6 font-pixel text-[clamp(30px,7vw,54px)] leading-[1.3] tracking-[0.02em] text-bright">404</h1>
+    <p class="mt-4 max-w-[52ch] text-[15px] text-muted">
+      This path is not on the map. The projects, the toolkit and the contact address
+      all live on the one page that is.
+    </p>
+
+    <div class="mt-7 flex flex-wrap gap-2.5">
+      <a class="btn notch inline-flex items-center gap-2 border border-accent bg-accent px-[15px] py-[11px] font-mono text-[13px] text-bg no-underline transition hover:-translate-y-px hover:brightness-[1.08]" href="/" aria-label="Back to the homepage"><span aria-hidden="true">$</span> cd ~</a>
+      <a class="btn notch inline-flex items-center gap-2 border border-line2 bg-transparent px-[15px] py-[11px] font-mono text-[13px] text-ink no-underline transition hover:-translate-y-px hover:border-accent hover:text-accent" href="/#projects">selected projects</a>
+    </div>
+
+    <p class="mt-10 font-mono text-[12px] text-dim"><span class="text-dim">$</span> Vincent Tiono &middot; Jakarta, Indonesia <span class="caret animate-blink"></span></p>
+  </main>
+</body>
+</html>

@@ -6,6 +6,20 @@
   <title>Vincent Tiono — Cyber Security &amp; Penetration Testing</title>
   <meta name="description" content="Portfolio of Vincent Tiono — Computer Science student specializing in cyber security and penetration testing. Mobile & web application security assessments." />
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="canonical" href="https://yenmau.github.io/" />
+  <!-- Link previews: og.png is a generated 1200x630 card, absolute URL because
+       scrapers do not resolve relative paths. -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Vincent Tiono" />
+  <meta property="og:title" content="Vincent Tiono — Cyber Security &amp; Penetration Testing" />
+  <meta property="og:description" content="Mobile and web application security assessments — OWASP MASTG, Burp Suite, Frida, JADX. Findings reported with redacted evidence and anonymized targets." />
+  <meta property="og:url" content="https://yenmau.github.io/" />
+  <meta property="og:image" content="https://yenmau.github.io/assets/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Vincent Tiono — cyber security and penetration testing" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="theme-color" content="#06080d" />
   <link rel="preload" as="image" href="assets/portrait.jpg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -320,6 +334,18 @@
         </article>
       </div>
 
+      <!-- Live GitHub figures. Ships hidden on purpose: app.js reveals it only
+           once api.github.com has answered, so with JS off, offline or rate
+           limited there is no strip at all instead of a placeholder that lies.
+           Every number in it comes from the API, never from this markup. -->
+      <div class="gh-live notch-card mt-[18px] flex flex-wrap items-center gap-x-[24px] gap-y-2.5 border border-line bg-gradient-to-b from-panel to-panel2 px-5 py-3.5 font-mono text-[12px] text-muted" id="gh-live" data-user="Yenmau" hidden>
+        <span class="flex flex-none items-center gap-2 text-[11px] uppercase tracking-[0.1em] text-accent"><span class="dot h-[6px] w-[6px] animate-pulse-dot bg-accent"></span>live</span>
+        <span class="whitespace-nowrap"><span class="text-dim">last push</span> <a class="text-ink no-underline transition-colors hover:text-accent" id="gh-repo" href="https://github.com/Yenmau" target="_blank" rel="noopener">&mdash;</a> <span class="text-dim" id="gh-when">&mdash;</span></span>
+        <span class="whitespace-nowrap"><span class="text-dim">languages, by repo</span> <span class="text-ink" id="gh-lang">&mdash;</span></span>
+        <span class="whitespace-nowrap"><span class="text-dim">public repos</span> <span class="text-ink" id="gh-repos">&mdash;</span></span>
+        <span class="whitespace-nowrap text-dim max-[760px]:w-full">via api.github.com &middot; fetched <span id="gh-fetched">&mdash;</span></span>
+      </div>
+
       <div class="more mt-[26px]">
         <a class="btn notch group inline-flex items-center gap-2 border border-line2 bg-transparent px-[21px] py-[13px] font-mono text-[13.5px] text-ink no-underline transition hover:-translate-y-px hover:border-accent hover:bg-accent/5 hover:text-accent" href="https://github.com/Yenmau?tab=repositories" target="_blank" rel="noopener">
           More projects on GitHub <span class="arrow inline-block transition-transform group-hover:translate-x-[3px]" aria-hidden="true">&rarr;</span>
@@ -560,7 +586,7 @@
       </div>
     </div>
     <div class="footer-grid grid grid-cols-2 items-start gap-x-11 gap-y-4 pt-[22px] max-[760px]:grid-cols-1 max-[760px]:gap-x-3.5 max-[760px]:gap-y-3.5">
-      <p class="footer-fine m-0 font-mono text-[12px] text-dim"><span class="text-dim">$</span> Vincent Tiono &middot; Jakarta, Indonesia <span class="caret animate-blink"></span></p>
+      <p class="footer-fine m-0 font-mono text-[12px] text-dim"><span class="text-dim">deployed</span> <span id="last-updated" title="last push to the repository that serves this page">2026-10-07</span><span id="last-commit"></span><br /><span class="text-dim">$</span> Vincent Tiono &middot; Jakarta, Indonesia <span class="caret animate-blink"></span></p>
       <p class="footer-note m-0 text-[12.5px] leading-[1.62] text-muted">
         All security testing documented here was performed against authorized labs or anonymized targets,
         in controlled environments. Nothing here targets systems without permission.

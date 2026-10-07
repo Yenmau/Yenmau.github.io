@@ -214,4 +214,82 @@
       window.addEventListener(ev, finish, { passive: true, once: true });
     });
   }
+
+  // Favicon blink: two SVG frames swapped on a timer, so the tick in the shield
+  // reads as a live cursor. Browsers animate neither SMIL nor CSS inside a
+  // favicon, hence the swap. The check runs on every tick rather than once, so
+  // the footer's motion switch turns it on too (this machine reports
+  // prefers-reduced-motion, which is exactly why that switch exists). The static
+  // frame is what the markup links to, so a failure here leaves the plain mark.
+  var icon = document.querySelector('link[rel="icon"]');
+  if (icon) {
+    var FRAMES = [icon.getAttribute('href'), 'assets/favicon-blink.svg'];
+    var f = 0;
+    var wantsMotion = function () {
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      return !reduce || document.documentElement.classList.contains('motion-full');
+    };
+    window.setInterval(function () {
+      if (!wantsMotion()) { f = 0; icon.setAttribute('href', FRAMES[0]); return; }
+      f = 1 - f;
+      icon.setAttribute('href', FRAMES[f]);
+    }, 640);
+  }
+
+  // Live GitHub figures — one unauthenticated call to api.github.com (CORS is
+  // open, and there is no key to leak). The strip ships hidden and only appears
+  // once real numbers are in hand, so a rate-limited, offline or no-JS visitor
+  // sees no strip rather than a placeholder. The footer date rides along on the
+  // same payload: it is the last push to the repo that serves this page.
+  var gh = document.getElementById('gh-live');
+  var setText = function (id, v) { var el = document.getElementById(id); if (el) el.textContent = v; };
+  var ago = function (iso) {
+    var s = (Date.now() - new Date(iso).getTime()) / 1000;
+    if (isNaN(s) || s < 0) return '';
+    if (s < 3600) return Math.max(1, Math.round(s / 60)) + ' m ago';
+    if (s < 86400) return Math.round(s / 3600) + ' h ago';
+    if (s < 2592000) return Math.round(s / 86400) + ' d ago';
+    return new Date(iso).toISOString().slice(0, 10);
+  };
+  if (gh && window.fetch && window.AbortController) {
+    var user = gh.getAttribute('data-user');
+    var ctl = new AbortController();
+    var stop = window.setTimeout(function () { ctl.abort(); }, 7000);
+    window.fetch('https://api.github.com/users/' + user + '/repos?per_page=100&sort=pushed', { signal: ctl.signal })
+      .then(function (r) { if (!r.ok) throw new Error('github ' + r.status); return r.json(); })
+      .then(function (repos) {
+        window.clearTimeout(stop);
+        if (!Array.isArray(repos) || !repos.length) return;
+        var byPush = repos.slice().sort(function (a, b) { return new Date(b.pushed_at) - new Date(a.pushed_at); });
+        var byLang = {};
+        repos.forEach(function (r) { if (r.language) byLang[r.language] = (byLang[r.language] || 0) + 1; });
+        var top = Object.keys(byLang).sort(function (a, b) { return byLang[b] - byLang[a]; }).slice(0, 2);
+        var link = document.getElementById('gh-repo');
+        if (link) { link.textContent = byPush[0].name; link.href = byPush[0].html_url; }
+        setText('gh-when', ago(byPush[0].pushed_at));
+        setText('gh-lang', top.map(function (l) { return l + ' (' + byLang[l] + ')'; }).join(' \u00b7 '));
+        setText('gh-repos', String(repos.length));
+        setText('gh-fetched', new Date().toISOString().slice(0, 10));
+        gh.hidden = false;
+        var self = repos.filter(function (r) { return r.name.toLowerCase() === (user + '.github.io').toLowerCase(); })[0];
+        if (self && self.pushed_at) setText('last-updated', self.pushed_at.slice(0, 10));
+      })
+      .catch(function () { window.clearTimeout(stop); });
+
+    // Commit subject for the same repo: a second call, so a failure here only
+    // ever costs the footer its suffix. It writes into its own span — the date
+    // and the sha come from different responses, and reusing one node would let
+    // whichever lands last wipe the other.
+    window.fetch('https://api.github.com/repos/' + user + '/' + user + '.github.io/commits?per_page=1', { signal: ctl.signal })
+      .then(function (r) { if (!r.ok) throw new Error('github ' + r.status); return r.json(); })
+      .then(function (c) {
+        if (!Array.isArray(c) || !c.length) return;
+        var el = document.getElementById('last-commit');
+        if (!el) return;
+        var subject = (c[0].commit.message || '').split('\n')[0];
+        el.textContent = ' \u00b7 ' + c[0].sha.slice(0, 7);
+        el.title = 'last commit \u2014 ' + subject;
+      })
+      .catch(function () {});
+  }
 })();

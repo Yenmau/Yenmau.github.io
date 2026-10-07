@@ -40,6 +40,15 @@ npm run watch:css # rebuild on save while styling
   committed. They are the one thing on the page that is not a description of
   work; the caption labels them and stops there. Targets stay anonymized: no
   domain, package name, token or account id survives the redaction pass.
+- **Live GitHub strip** (`.gh-live`): newest push, languages by repo count, public
+  repo count, and the fetch date, pulled from one unauthenticated
+  `api.github.com` call. It ships `hidden` and is revealed only once real numbers
+  have arrived, so a no-JS, offline or rate-limited visitor sees no strip instead
+  of a placeholder that lies. The footer takes its `deployed <date>` and the short
+  commit sha from the same payload.
+- **404 page**: `404.html`, served by GitHub Pages for any unknown path — laid out
+  as a request/response pair (`HTTP/2 404 { "error": "no route here" }`) with the
+  requested path echoed from `location.pathname` via `textContent`.
 - No third-party artwork is bundled. An earlier pass pasted a reference image;
   it was removed — a reference for the design language is not a file to ship.
 
@@ -48,13 +57,15 @@ npm run watch:css # rebuild on save while styling
 | path | what |
 |---|---|
 | `index.html` | the page — markup + Tailwind utilities |
-| `src/input.css` | Tailwind source: tokens + custom effect layer |
+| `404.html` | GitHub Pages' error page; same sheet, styled as a 404 request/response |
+| `src/input.css` | Tailwind source: tokens + custom effect layer (`@source` lists both HTML files) |
 | `assets/site.css` | compiled output (committed, do not edit) |
 | `assets/grain.svg` | tiled noise texture for the page surface |
 | `assets/evidence/*.png` | redacted evidence strips shown on the two Android project cards |
-| `app.js` | progressive enhancements — nav highlight, scroll progress, reveal, pointer spotlight, terminal typing, boot splash, motion switch. Content is always visible without JS. |
+| `assets/og.png` | generated 1200x630 link-preview card |
+| `app.js` | progressive enhancements — nav highlight, scroll progress, reveal, pointer spotlight, terminal typing, boot splash, motion switch, favicon blink, live GitHub strip. Content is always visible without JS. |
 | `assets/portrait.jpg` | hero portrait |
-| `assets/favicon.svg` | favicon |
+| `assets/favicon.svg` | favicon (the blink frame is `assets/favicon-blink.svg`) |
 
 ## Deploy
 

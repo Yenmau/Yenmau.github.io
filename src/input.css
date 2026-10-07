@@ -17,6 +17,8 @@
 
 @import "tailwindcss" source(none);
 @source "../index.html";
+/* the 404 page carries its own utilities — Tailwind only scans what is listed */
+@source "../404.html";
 
 @theme {
   /* surfaces */
