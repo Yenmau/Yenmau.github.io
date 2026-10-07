@@ -249,12 +249,22 @@
       radial-gradient(120% 80% at 78% 12%, rgba(94, 234, 212, 0.1), transparent 60%);
   }
 
-  /* ---------- artwork slot: dark-grades whatever image is dropped in ---------- */
-  .banner-tint {
-    background:
-      linear-gradient(180deg, rgba(6, 8, 13, 0.62) 0%, rgba(6, 8, 13, 0.04) 38%, rgba(6, 8, 13, 0.78) 100%),
-      radial-gradient(120% 90% at 50% 105%, rgba(94, 234, 212, 0.1), transparent 62%);
+  /* ---------- built-in motif: the razor-wire rule ----------
+     The site's own decoration, drawn in the page's geometry — a straight strand,
+     chevron twists and square-set barbs — as a 240x16 tile that repeats along an
+     edge. It replaces the plain 1px rule above every section head and above the
+     footer, so a section boundary reads as a cut rather than a hairline.
+     The crimson variant carries the severity temperature; it is used once, above
+     the projects section, where the red finding chips already live. */
+  .wire-band {
+    height: 24px;
+    background-image: url("wire.svg");
+    background-repeat: repeat-x;
+    background-position: left center;
+    background-size: 240px 16px;
+    opacity: 0.8;
   }
+  .wire-band-crimson { background-image: url("wire-crimson.svg"); }
 
   /* ---------- reveal ----------
      The hidden state is added BY app.js (.pre), never by CSS alone, so if the
@@ -324,9 +334,11 @@
 /* ---------- responsive shapes ----------
    Below 760px the project panels lose their clip-path: at that width the cut
    corners eat more than they give. The framed photo, the terminal and the
-   artwork banner keep theirs. */
+   razor-wire rules keep theirs; the wire itself thins out and spaces out so it
+   reads as a cut instead of texture. */
 @media (max-width: 760px) {
   .notch-card { clip-path: none; }
+  .wire-band { opacity: 0.65; background-size: 320px 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {

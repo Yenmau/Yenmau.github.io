@@ -32,13 +32,18 @@ npm run watch:css # rebuild on save while styling
 | `assets/portrait.jpg` | hero portrait |
 | `assets/favicon.svg` | favicon |
 
-## The artwork slot
+## The razor-wire rule
 
-The projects section opens with an empty framed strip (`figure.reveal` in
-`index.html`) reserved for a wide cover image. No third-party art is bundled —
-drop your own file at `assets/artwork.jpg` and follow the comment above the
-`<figure>`; keep the `.banner-tint` span so the image dark-grades into the page.
-Delete the `<figure>` if you don't want the strip.
+Section boundaries (above each section head, and above the footer) are drawn with
+the site's one decorative motif: a schematic razor wire — a straight strand,
+chevron twists and square-set barbs — tiled from `assets/wire.svg` (240×16, the
+crimson variant is `assets/wire-crimson.svg`). It replaces the plain 1px rule, so
+a section starts with a cut instead of a hairline. `.wire-band` in
+`src/input.css` controls size, spacing and opacity; swap the class for
+`.wire-band-crimson` on any band that should carry the severity temperature. The
+crimson version is used once, above `#projects`, where the red finding chips are.
+On narrow screens the tile widens and the opacity drops so the wire reads as a
+cut rather than as texture.
 
 ## Deploy
 
