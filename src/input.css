@@ -126,11 +126,21 @@
     0%, 100% { opacity: 1; }
     50% { opacity: 0.87; }
   }
+  /* the reduced-motion ambient layer: opacity only, no movement, so the page
+     breathes instead of freezing when the OS asks for less motion */
+  @keyframes glow-breathe {
+    0%, 100% { opacity: 0.62; }
+    50% { opacity: 1; }
+  }
 }
 
 @layer base {
   ::selection { background: rgba(94, 234, 212, 0.26); color: #fff; }
   :focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; }
+  /* Anchor jumps must clear the pinned nav. --nav-h is kept in sync by app.js
+     (the bar grows when the nav wraps on narrow screens); 96px is the fallback
+     for a no-JS load, where the bar is stuck at its one-row height anyway. */
+  html { scroll-padding-top: var(--nav-h, 96px); }
 }
 
 @layer components {
@@ -440,6 +450,198 @@
     box-shadow: 0 0 9px rgba(94, 234, 212, 0.75);
   }
   .boot-lock path { fill: var(--color-accent); }
+
+  /* ---------- cursor aurora ----------
+     One fixed teal wash that trails the pointer (--cx/--cy are written by app.js
+     on a rAF tick). It is a user-driven effect, not an autonomous one: no motion
+     happens unless the visitor moves the mouse, so it is safe to keep under
+     prefers-reduced-motion. With JS off the class is never added and the layer
+     stays invisible. */
+  .aurora {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    background: radial-gradient(
+      380px circle at var(--cx, 50%) var(--cy, 30%),
+      rgba(94, 234, 212, 0.1),
+      rgba(94, 234, 212, 0.028) 45%,
+      transparent 70%
+    );
+  }
+  html.js.ptr .aurora { opacity: 1; }
+
+  /* ---------- metric strip: the hero's numbers, at numeral scale ----------
+     Every figure here is already stated in the page copy below (11 findings,
+     2 critical, 8.2 highest CVSS, 4 documented cases). The digits count up
+     once, when the strip enters view; the markup holds the FINAL value, so a
+     failed script leaves the real number on screen, never a zero. */
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border: 1px solid var(--color-line);
+    background: linear-gradient(180deg, rgba(12, 17, 25, 0.72), rgba(6, 8, 13, 0.5));
+  }
+  .metric {
+    min-width: 0;
+    padding: 16px 18px 15px;
+    border-right: 1px solid var(--color-line);
+  }
+  .metric:last-child { border-right: 0; }
+  .metric-v {
+    display: block;
+    font-size: clamp(26px, 3.4vw, 38px);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--color-bright);
+    font-variant-numeric: tabular-nums;
+  }
+  .metric-v .unit { font-size: 0.5em; letter-spacing: 0; color: var(--color-muted); }
+  .metric-k {
+    display: block;
+    margin-top: 7px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    line-height: 1.45;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-dim);
+  }
+  /* the strip answers the pointer with a lit cell, same language as .spot */
+  .metric:hover .metric-v { color: var(--color-accent); }
+  .metric-v { transition: color 0.25s ease; }
+
+  /* ---------- pinned nav ----------
+     The bar sits on top of the page instead of being part of it, so it needs its
+     own surface: a translucent tint plus a backdrop blur, which reads as glass
+     over the drifting grid rather than as a solid lid. Once the page has moved,
+     .scrolled (added by app.js) makes it more opaque and lights the bottom edge
+     in teal — the same language as the section blades. The sticky positioning
+     itself is pure CSS, so a failed script still leaves a pinned bar. */
+  .nav {
+    background: rgba(6, 8, 13, 0.72);
+    -webkit-backdrop-filter: blur(10px) saturate(1.12);
+    backdrop-filter: blur(10px) saturate(1.12);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  .nav.scrolled {
+    background: rgba(6, 8, 13, 0.94);
+    border-bottom-color: rgba(94, 234, 212, 0.26);
+    box-shadow:
+      0 8px 26px -16px rgba(94, 234, 212, 0.42),
+      0 12px 34px -20px rgba(0, 0, 0, 0.95);
+  }
+  /* Wrap behaviour lives here, not in utilities: a Tailwind variant like
+     `max-[760px]:flex-wrap` sits in the utilities layer and would beat anything
+     written in this layer at that width. The row never wraps — a two-row pinned
+     bar eats a tenth of a phone screen — it scrolls sideways instead (see the
+     760px block below). */
+  .nav-inner { flex-wrap: nowrap; }
+
+  /* ---------- nav: the active marker slides between links ---------- */
+  .nav-links { position: relative; }
+  .nav-ind {
+    position: absolute;
+    left: 0;
+    bottom: -7px;
+    height: 2px;
+    width: 0;
+    opacity: 0;
+    background: linear-gradient(90deg, rgba(94, 234, 212, 0.15), var(--color-accent));
+    transition: transform 0.3s cubic-bezier(0.2, 0.7, 0.2, 1), width 0.3s cubic-bezier(0.2, 0.7, 0.2, 1),
+      opacity 0.25s ease;
+  }
+  .nav-links.has-active .nav-ind { opacity: 1; }
+
+  /* ---------- section numerals light up while their section is in view ---------- */
+  .sec-num { transition: color 0.3s ease, text-shadow 0.3s ease; }
+  .sec-num.lit {
+    color: #b9fff3;
+    text-shadow: 0 0 12px rgba(94, 234, 212, 0.85), 0 0 26px rgba(94, 234, 212, 0.35);
+  }
+
+  /* ---------- terminal prompt: the panel stops being a picture of a shell ----------
+     The form is added by app.js, so a no-JS visitor keeps exactly the terminal
+     that shipped. Commands only scroll or open an address — nothing here can
+     trap a visitor inside the panel. */
+  .term-prompt {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 11px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--color-line);
+  }
+  .term-prompt .ps1 { flex: none; color: var(--color-dim); }
+  .term-prompt input {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font: inherit;
+    color: var(--color-accent);
+    caret-color: var(--color-accent);
+  }
+  .term-prompt input::placeholder { color: rgba(125, 143, 163, 0.75); }
+  .term-hint { flex: none; font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-dim); }
+  .term-out { color: var(--color-dim); }
+  .term-echo { color: var(--color-muted); }
+  .term-echo .ps1 { color: var(--color-dim); }
+
+  /* ---------- portrait HUD: the framed photo reads as a live capture ---------- */
+  .hud-corner {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border: 1.5px solid rgba(94, 234, 212, 0.7);
+    pointer-events: none;
+  }
+  .hud-corner.tl { top: 9px; left: 9px; border-right: 0; border-bottom: 0; }
+  .hud-corner.tr { top: 9px; right: 9px; border-left: 0; border-bottom: 0; }
+  .hud-corner.bl { bottom: 9px; left: 9px; border-right: 0; border-top: 0; }
+  .hud-corner.br { bottom: 9px; right: 9px; border-left: 0; border-top: 0; }
+  .hud-cross {
+    position: absolute;
+    left: var(--hx, 50%);
+    top: var(--hy, 38%);
+    width: 46px;
+    height: 46px;
+    margin: -23px 0 0 -23px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background-image: linear-gradient(rgba(94, 234, 212, 0.55), rgba(94, 234, 212, 0.55)),
+      linear-gradient(rgba(94, 234, 212, 0.55), rgba(94, 234, 212, 0.55));
+    background-size: 100% 1px, 1px 100%;
+    background-position: center, center;
+    background-repeat: no-repeat;
+  }
+  .idcard-img:hover .hud-cross { opacity: 1; }
+  .idcard-img img { transition: transform 0.6s cubic-bezier(0.2, 0.7, 0.2, 1), filter 0.4s ease; }
+  .idcard-img:hover img { transform: scale(1.035); }
+  .hud-tag {
+    position: absolute;
+    left: 9px;
+    bottom: 9px;
+    padding: 3px 6px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-accent);
+    background: rgba(5, 7, 11, 0.72);
+    border: 1px solid rgba(94, 234, 212, 0.28);
+    pointer-events: none;
+  }
+
+  /* ---------- project card hover: the index lights, the edge charges ---------- */
+  .card-idx { transition: color 0.25s ease; }
+  .card:hover .card-idx { color: var(--color-accent); }
 }
 
 /* ---------- responsive shapes ----------
@@ -450,6 +652,14 @@
   /* a smaller bloom on small screens: the blade stays crisp, the haze does not
      wash the block underneath */
   .saber::before { top: -6px; height: 14px; opacity: 0.85; }
+}
+
+/* declared again outside @theme so it is emitted even though no Tailwind
+   animation utility references it (Tailwind only emits @theme keyframes that an
+   --animate-* utility pulls in). */
+@keyframes glow-breathe {
+  0%, 100% { opacity: 0.62; }
+  50% { opacity: 1; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -465,10 +675,41 @@
   html:not(.motion-full) .fx-beam,
   html:not(.motion-full) .ticker-track { animation: none; }
   html:not(.motion-full) .ticker-track { transform: none; }
+  /* ...but the glow keeps breathing, as opacity only: the page still reads as
+     running rather than as a printed poster, without moving any large area. */
+  html:not(.motion-full) .fx-glow { animation: glow-breathe 9s ease-in-out infinite; }
   .term-body.typing .trow,
   .term-body.typing .tline { transform: none; }
   html.js .reveal.pre { opacity: 1; transform: none; }
   html.js .reveal.in { transition: none; }
+}
+
+/* the metric strip folds to two columns before it can squash the numerals */
+@media (max-width: 760px) {
+  .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .metric { border-bottom: 1px solid var(--color-line); }
+  .metric:nth-child(2n) { border-right: 0; }
+  .metric:nth-last-child(-n + 2) { border-bottom: 0; }
+}
+
+/* The nav row never wraps — a two-row pinned bar eats a tenth of a phone screen —
+   so below 1020px (where the brand, the links and the status pill stop fitting on
+   one line together) the links scroll sideways instead. The edge fade is applied
+   only while the row actually overflows; the class is set by app.js. */
+@media (max-width: 1020px) {
+  .nav-inner > .nav-links { min-width: 0; }
+  .nav-links {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-links::-webkit-scrollbar { display: none; }
+  .nav-links > a { flex: none; }
+  .nav-links.nav-links--scroll {
+    -webkit-mask-image: linear-gradient(90deg, #000 84%, transparent 100%);
+    mask-image: linear-gradient(90deg, #000 84%, transparent 100%);
+  }
 }
 
 @media print {

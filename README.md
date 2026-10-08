@@ -46,6 +46,37 @@ npm run watch:css # rebuild on save while styling
   have arrived, so a no-JS, offline or rate-limited visitor sees no strip instead
   of a placeholder that lies. The footer takes its `deployed <date>` and the short
   commit sha from the same payload.
+- **Life pass** — the "alive" layer, all of it additive (markup that ships hidden
+  is only revealed by `app.js`; every figure the script touches is already the
+  real value in the HTML):
+  - **Metric strip** (`.metrics`) under the hero: 11 findings / 2 critical / 8.2
+    highest CVSS / 4 documented cases. Every number is stated in the copy below —
+    the strip restates, it never introduces a figure. `data-count` drives a
+    one-shot count-up on first view, skipped under `prefers-reduced-motion`.
+  - **Interactive terminal prompt** (`.term-prompt`): the panel is a shell now,
+    not a picture of one. `help`, a section name, `contact`, `github`, `whoami`,
+    `clear`; output is capped at four lines and the form ships `hidden`.
+  - **Cursor aurora** (`.aurora`) and the **portrait viewfinder** (`.hud-corner` /
+    `.hud-cross`): `--cx`/`--cy` and `--hx`/`--hy` are written from one
+    `pointermove` listener on a rAF tick. User-driven, so they stay under reduced
+    motion; gated on `(hover: hover) and (pointer: fine)`.
+  - **Live clock**: the header pill prints *Jakarta* time computed from UTC (not
+    the visitor's zone), and the portrait bar counts seconds on the page — a
+    still frame that is nonetheless running.
+  - **Nav marker** (`.nav-ind`) slides under the active link; **section numerals**
+    (`.sec-num.lit`) light while their section is in view.
+  - Under reduced motion the glow still **breathes** (`glow-breathe`, opacity
+    only) — the page reads as running without moving any large area.
+- **Pinned nav** (`.nav`): the header is `position: sticky`, so it follows the page
+  instead of scrolling away. The bar spans the full viewport width and `.nav-inner`
+  holds the 1180px container, so it does not read as a strip that stops at the
+  content edge. It carries its own surface — translucent tint + `backdrop-filter`
+  — so the drifting grid shows through as glass; once the page has moved, `.scrolled`
+  (added by `app.js`) makes it opaque and lights the bottom edge in teal. Anchor
+  jumps clear it through `html { scroll-padding-top: var(--nav-h) }`, where `--nav-h`
+  is the bar's measured height (+12px) written by `app.js`; 96px is the no-JS
+  fallback. The row never wraps — below 1020px it scrolls sideways instead, with an
+  edge fade that only appears while it actually overflows.
 - **404 page**: `404.html`, served by GitHub Pages for any unknown path — laid out
   as a request/response pair (`HTTP/2 404 { "error": "no route here" }`) with the
   requested path echoed from `location.pathname` via `textContent`.
@@ -63,7 +94,7 @@ npm run watch:css # rebuild on save while styling
 | `assets/grain.svg` | tiled noise texture for the page surface |
 | `assets/evidence/*.png` | redacted evidence strips shown on the two Android project cards |
 | `assets/og.png` | generated 1200x630 link-preview card |
-| `app.js` | progressive enhancements — nav highlight, scroll progress, reveal, pointer spotlight, terminal typing, boot splash, motion switch, favicon blink, live GitHub strip. Content is always visible without JS. |
+| `app.js` | progressive enhancements — nav highlight + sliding marker, scroll progress, reveal, pointer spotlight, cursor aurora, viewfinder cross, live clocks, metric count-up, interactive terminal prompt, terminal typing, boot splash, motion switch, favicon blink, live GitHub strip. Content is always visible without JS. |
 | `assets/portrait.jpg` | hero portrait |
 | `assets/favicon.svg` | favicon (the blink frame is `assets/favicon-blink.svg`) |
 
@@ -72,3 +103,9 @@ npm run watch:css # rebuild on save while styling
 Push to `main`. GitHub Pages serves the repo root as-is. Pages caches the HTML
 for 10 minutes (`Cache-Control: max-age=600`), so a reload right after a deploy
 can still show the previous build.
+
+Both HTML files link the sheet as `assets/site.css?v=<token>` and the `404.html`
+one carries the same token — **bump the token in both files whenever `site.css`
+changes**. Without it, `site.css` can stay cached for its own 10 minutes and a
+visitor reads the old design against the new markup (the pinned nav silently
+reverting to a scrolling bar is exactly that failure).

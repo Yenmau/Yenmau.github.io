@@ -3,26 +3,17 @@
 // class this file adds, and each one carries a hard-stop timeout, so a failed
 // script can never leave a line or a card hidden.
 (function () {
-  // Highlight the nav link for the section currently in view.
-  var links = document.querySelectorAll('.nav-links a[href^="#"]');
-  var map = new Map();
-  links.forEach(function (a) {
+  // Nav highlight. Driven by a scroll-position check rather than an
+  // IntersectionObserver: an instant jump (anchor click, scrollTo) can move a
+  // section from far below the viewport to far above it inside a single frame, so
+  // no intersection is ever observed and the link would stay dead. Measuring which
+  // section crosses the bar's own bottom edge is jump-proof — the same reason the
+  // reveal code below uses a position check. The sliding marker is placed here too.
+  var navTargets = [];
+  document.querySelectorAll('.nav-links a[href^="#"]').forEach(function (a) {
     var t = document.querySelector(a.getAttribute('href'));
-    if (t) map.set(t, a);
+    if (t) navTargets.push([t, a]);
   });
-  if ('IntersectionObserver' in window && map.size) {
-    var nav = new IntersectionObserver(
-      function (entries) {
-        entries.forEach(function (e) {
-          var a = map.get(e.target);
-          if (!a) return;
-          a.classList.toggle('is-active', e.isIntersecting);
-        });
-      },
-      { rootMargin: '-25% 0px -60% 0px' }
-    );
-    map.forEach(function (_a, t) { nav.observe(t); });
-  }
 
   // Scroll progress hairline at the very top of the page.
   var bar = document.querySelector('.progress i');
@@ -291,5 +282,206 @@
         el.title = 'last commit \u2014 ' + subject;
       })
       .catch(function () {});
+  }
+
+  // ---- life pass ----------------------------------------------------------
+  // Everything below is additive: each block only reveals markup that shipped
+  // hidden, or rewrites a value with the value already in the HTML.
+
+  // The sliding marker under the active nav link. Placed from the links' own
+  // offsetLeft/width, so it needs no hard-coded positions; the scroll pass below
+  // calls it, and a resize re-places it because offsetLeft is layout-dependent.
+  var navWrap = document.querySelector('.nav-links');
+  var navInd = navWrap && navWrap.querySelector('.nav-ind');
+  var placeInd = function (a) {
+    if (!navInd || !navWrap || !a) return;
+    navWrap.classList.add('has-active');
+    navInd.style.width = a.offsetWidth + 'px';
+    navInd.style.transform = 'translateX(' + a.offsetLeft + 'px)';
+  };
+  if (navWrap && navInd) {
+    window.addEventListener('resize', function () {
+      var act = navWrap.querySelector('.navlink.is-active');
+      if (act) placeInd(act);
+    }, { passive: true });
+  }
+
+  // Cursor aurora + the portrait's viewfinder cross. One pointermove listener on
+  // a rAF tick writes four custom properties; the CSS does the drawing. Wired
+  // only for a real hovering pointer, so touch devices never pay for it.
+  var finePointer = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (finePointer) {
+    var rootEl = document.documentElement;
+    var crossEl = document.querySelector('.hud-cross');
+    var paneEl = document.querySelector('.idcard-img');
+    rootEl.classList.add('ptr');
+    var lastMove = null;
+    var moveRaf = 0;
+    var paintMove = function (e) {
+      rootEl.style.setProperty('--cx', e.clientX.toFixed(0) + 'px');
+      rootEl.style.setProperty('--cy', e.clientY.toFixed(0) + 'px');
+      if (crossEl && paneEl) {
+        var r = paneEl.getBoundingClientRect();
+        crossEl.style.setProperty('--hx', (((e.clientX - r.left) / r.width) * 100).toFixed(2) + '%');
+        crossEl.style.setProperty('--hy', (((e.clientY - r.top) / r.height) * 100).toFixed(2) + '%');
+      }
+    };
+    window.addEventListener('pointermove', function (e) {
+      lastMove = e;
+      if (moveRaf) return;
+      moveRaf = window.requestAnimationFrame(function () {
+        moveRaf = 0;
+        if (lastMove) paintMove(lastMove);
+      });
+    }, { passive: true });
+  }
+
+  // Live clock: the pill's time is Jakarta time (UTC+7) computed from UTC, not
+  // the visitor's local zone, so the label never lies. The portrait bar counts
+  // the seconds this page has been open — a still frame that is nonetheless running.
+  var clockEl = document.getElementById('clock');
+  var recEl = document.getElementById('rec-clock');
+  if (clockEl || recEl) {
+    var openedAt = Date.now();
+    var pad2 = function (n) { return (n < 10 ? '0' : '') + n; };
+    var tickClock = function () {
+      var now = new Date();
+      if (clockEl) {
+        var jkt = new Date(now.getTime() + (now.getTimezoneOffset() + 420) * 60000);
+        clockEl.textContent = pad2(jkt.getHours()) + ':' + pad2(jkt.getMinutes()) + ':' + pad2(jkt.getSeconds());
+      }
+      if (recEl) {
+        var s = Math.max(0, Math.floor((Date.now() - openedAt) / 1000));
+        recEl.textContent = pad2(Math.floor(s / 60)) + ':' + pad2(s % 60);
+      }
+    };
+    tickClock();
+    window.setInterval(tickClock, 1000);
+  }
+
+  // Metric count-up. The markup already holds the final figure, so this can only
+  // ever print the same number back; a failure leaves the real value untouched.
+  // No timer fallback on purpose: the strip starts below the fold, so a timeout
+  // would burn the count-up while nobody is looking.
+  var metricBox = document.querySelector('.metrics');
+  if (metricBox) {
+    var metricCells = Array.prototype.slice.call(metricBox.querySelectorAll('.metric-v'));
+    var counted = false;
+    var reduceNow = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var countUp = function () {
+      if (counted) return;
+      counted = true;
+      if (reduceNow && !document.documentElement.classList.contains('motion-full')) return;
+      metricCells.forEach(function (el) {
+        var to = parseFloat(el.getAttribute('data-count'));
+        if (isNaN(to)) return;
+        var dec = parseInt(el.getAttribute('data-decimals') || '0', 10);
+        var from = window.performance.now();
+        var step = function (now) {
+          var p = Math.min(1, (now - from) / 900);
+          var eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = (to * eased).toFixed(dec);
+          if (p < 1) window.requestAnimationFrame(step);
+          else el.textContent = to.toFixed(dec);
+        };
+        window.requestAnimationFrame(step);
+      });
+    };
+    var armMetrics = function () {
+      if (metricBox.getBoundingClientRect().top < window.innerHeight * 0.94) {
+        countUp();
+        window.removeEventListener('scroll', armMetrics);
+        window.removeEventListener('resize', armMetrics);
+      }
+    };
+    window.addEventListener('scroll', armMetrics, { passive: true });
+    window.addEventListener('resize', armMetrics, { passive: true });
+    armMetrics();
+  }
+
+  // Interactive prompt. The form ships hidden; it is revealed only here, so a
+  // no-JS visitor keeps the static terminal exactly as it was. Every command
+  // either scrolls, prints a line, or opens an address — none can trap a visitor.
+  var promptForm = document.getElementById('term-form');
+  var promptIn = document.getElementById('term-cmd');
+  var promptOut = document.getElementById('term-out');
+  if (promptForm && promptIn && promptOut) {
+    var JUMP = ['projects', 'toolkit', 'skills', 'about'];
+    var print = function (text, cls) {
+      var line = document.createElement('p');
+      line.className = 'tline m-0 ' + (cls || 'term-out');
+      line.textContent = text;
+      promptOut.appendChild(line);
+      while (promptOut.children.length > 4) promptOut.removeChild(promptOut.firstChild);
+    };
+    var runCmd = function (cmd) {
+      var target = null;
+      if (JUMP.indexOf(cmd) !== -1) target = document.getElementById(cmd);
+      if (target) { target.scrollIntoView({ behavior: 'smooth', block: 'start' }); print('[ok] ' + cmd); return; }
+      if (cmd === 'help' || cmd === '?') { print('projects  toolkit  skills  about  contact  github  whoami  clear'); return; }
+      if (cmd === 'contact') { print('[ok] opening mail client'); window.location.href = 'mailto:vinotiono@gmail.com'; return; }
+      if (cmd === 'github') { print('[ok] github.com/Yenmau'); window.open('https://github.com/Yenmau', '_blank', 'noopener'); return; }
+      if (cmd === 'whoami') { print('penetration testing \u00b7 cyber security'); return; }
+      if (cmd === 'clear') { promptOut.textContent = ''; return; }
+      print('command not found: ' + cmd + ' \u2014 try help');
+    };
+    promptForm.hidden = false;
+    promptForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var cmd = promptIn.value.trim().toLowerCase().replace(/\s+/g, ' ');
+      promptIn.value = '';
+      if (!cmd) return;
+      print('$ ' + cmd, 'term-echo');
+      runCmd(cmd);
+    });
+  }
+  // Pinned nav. Sticky comes from CSS, so this only keeps the two things the CSS
+  // cannot know: the height an anchor jump has to clear (--nav-h), and whether the
+  // bar is currently over the page (.scrolled) or against the top. The same tick
+  // flags a sideways-scrolling mobile nav so the edge fade only appears when there
+  // really is more to the right.
+  var navBar = document.querySelector('header.nav');
+  if (navBar) {
+    var navLinks = navBar.querySelector('.nav-links');
+    // Which section is under the bar: walk the candidates and keep the one whose
+    // box crosses the bar's bottom edge + 24px. Past the last section (over the
+    // footer) the previous state is held, so the marker never snaps back to nothing.
+    var activePair = null;
+    var markNav = function () {
+      var cut = navBar.getBoundingClientRect().bottom + 24;
+      var best = null;
+      navTargets.forEach(function (p) {
+        var r = p[0].getBoundingClientRect();
+        if (r.top <= cut && r.bottom > cut) best = p;
+      });
+      if (!best) best = activePair;
+      if (!best) return;
+      if (best !== activePair) {
+        navTargets.forEach(function (p) {
+          var on = p === best;
+          p[1].classList.toggle('is-active', on);
+          var num = p[0].querySelector('.sec-num');
+          if (num) num.classList.toggle('lit', on);
+        });
+        activePair = best;
+      }
+      placeInd(best[1]);
+    };
+    var syncNav = function () {
+      document.documentElement.style.setProperty('--nav-h', (navBar.offsetHeight + 12) + 'px');
+      navBar.classList.toggle('scrolled', window.scrollY > 8);
+      if (navLinks) {
+        navLinks.classList.toggle('nav-links--scroll', navLinks.scrollWidth > navLinks.clientWidth + 1);
+      }
+      markNav();
+    };
+    // Called straight from the handlers, with no requestAnimationFrame latch: a
+    // rAF callback does not run in a background tab, and a once-set "already
+    // scheduled" flag would then freeze the bar's state until the tab came back.
+    // The work is a handful of rect reads, and Chrome already aligns scroll events
+    // to the frame — the browser coalesces them for us.
+    window.addEventListener('scroll', syncNav, { passive: true });
+    window.addEventListener('resize', syncNav, { passive: true });
+    syncNav();
   }
 })();
